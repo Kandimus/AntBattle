@@ -1,3 +1,4 @@
+add_subdirectory(Log)
 add_subdirectory(Ant)
 add_subdirectory(Player)
 add_subdirectory(Core)

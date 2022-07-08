@@ -26,10 +26,12 @@ public:
 protected:
 	void incPosition(Position& pos, uint32_t x = 1) const;
 	uint32_t absPosition(Position& pos) const;
+	void generate();
 
 protected:
 	Position m_size;
 	std::vector<std::shared_ptr<Cell>> m_map;
+	//Config m_conf;
 };
 
 };
