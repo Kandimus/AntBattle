@@ -8,7 +8,7 @@ class IBattleLog
 {
 public:
 	IBattleLog() = default;
-	virtual ~Battle() = default;
+	virtual ~BattleLog() = default;
 
 
 	void toSave(const std::string& json) = 0;

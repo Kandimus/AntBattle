@@ -9,11 +9,12 @@
 namespace AntBattle {
 
 class Cell;
+class Config;
 
 class Map
 {
 public:
-	Map(uint32_t width, uint32_t height);
+	Map(uint32_t width, uint32_t height, const std::weak_ptr<Config>& config);
 	virtual ~Map() = default;
 
 	std::weak_ptr<Cell> cell(Position pos) const;
@@ -31,7 +32,7 @@ protected:
 protected:
 	Position m_size;
 	std::vector<std::shared_ptr<Cell>> m_map;
-	//Config m_conf;
+	std::weak_ptr<Config>  m_config;
 };
 
 };

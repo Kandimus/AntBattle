@@ -43,7 +43,7 @@ void Log::setDir(const std::string& dir)
 #ifdef _WIN32
 	char sep = '\\';
 #else
-	char sep = '/''
+	char sep = '/'
 #endif
 
 	std::lock_guard<std::mutex> guard(m_mutex);

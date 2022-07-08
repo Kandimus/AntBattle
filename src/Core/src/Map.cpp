@@ -3,7 +3,9 @@
 
 using namespace AntBattle;
 
-Map::Map(uint32_t width, uint32_t height) : m_size(width, height)
+Map::Map(uint32_t width, uint32_t height, const std::weak_ptr<Config>& config)
+	: m_size(width, height),
+	  m_config(config)
 {
 	m_map.resize(m_size.x() * m_size.y());
 
@@ -12,6 +14,11 @@ Map::Map(uint32_t width, uint32_t height) : m_size(width, height)
 		cell = std::make_shared<Cell>(pos);
 		incPosition(pos);
 	}
+}
+
+void Map::generate()
+{
+
 }
 
 void Map::incPosition(Position& pos, uint32_t x) const
