@@ -8,8 +8,10 @@
 
 namespace AntBattle {
 
+class Ant;
 class Cell;
 class Config;
+class Player;
 
 class Map
 {
@@ -24,10 +26,13 @@ public:
 	uint32_t sizeX() const;
 	uint32_t sizeY() const;
 
+	std::vector<std::shared_ptr<Ant>> generate(const std::vector<std::shared_ptr<Player>>& players);
+
+	void clearChanged();
+
 protected:
 	void incPosition(Position& pos, uint32_t x = 1) const;
 	uint32_t absPosition(Position& pos) const;
-	void generate();
 
 protected:
 	Position m_size;

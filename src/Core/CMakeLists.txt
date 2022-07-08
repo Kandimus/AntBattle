@@ -12,4 +12,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC "../json/include/nlohmann")
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json Log)
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json Log Player Ant)

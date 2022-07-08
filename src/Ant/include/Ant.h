@@ -1,9 +1,13 @@
 #pragma once
 
+#include <memory>
 #include "Position.h"
 #include "Direction.h"
+#include "../../Interface/PlayerInfo.h"
 
 namespace AntBattle {
+
+class Player;
 
 class Ant
 {
@@ -23,6 +27,9 @@ public:
 	virtual bool toAttack(Direction dir, uint32_t count_iter) = 0;
 	virtual bool toEeat(Direction dir) = 0;
 
+	std::weak_ptr<Player> player() const;
+	void setPlayer(std::weak_ptr<Player> player);
+
 protected:
 	Position m_pos;
 	Status m_status;
@@ -33,6 +40,8 @@ protected:
 
 	Position m_moveTo;
 	uint32_t m_iterationCount;
+	std::weak_ptr<Player> m_player;
+	AntProcess m_fnProcess;
 };
 
 };

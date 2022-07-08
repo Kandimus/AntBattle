@@ -11,6 +11,7 @@ public:
 	Config(const std::string& filename);
 	virtual ~Config() = default;
 
+	// map
 	uint32_t width();
 	uint32_t height();
 	double stoneOnMap();

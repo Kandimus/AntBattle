@@ -2,9 +2,9 @@
 #include <stdarg.h>
 #include <vector>
 #include <fstream>
+#include <iostream>
 #include "Log.h"
 
-ANT_BATTLE_LOG_EXPORT
 std::string format(const char *fmt, ...)
 {
 	va_list args;
@@ -60,7 +60,7 @@ void Log::put(const std::string& text)
 {
 	std::time_t t = std::time(nullptr);
 	std::tm* dt = std::localtime(&t);
-	std::string filename = m_dir + format("%x.log", t / (24 * 60 * 60));
+	std::string filename = m_dir + format("%08x.log", t / (24 * 60 * 60));
 	std::string fulltext = format("%02i.%02i.%04i %02i:%02i:%02i %s\n",
 								  dt->tm_mday, dt->tm_mon + 1, dt->tm_year + 1900,
 								  dt->tm_hour, dt->tm_min, dt->tm_sec,
@@ -73,4 +73,6 @@ void Log::put(const std::string& text)
 		file << fulltext;
 		file.close();
 	}
+
+	std::cout << fulltext;
 }

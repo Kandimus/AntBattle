@@ -16,6 +16,7 @@ public:
 	Cell(uint32_t x, uint32_t y);
 	virtual ~Cell() = default;
 
+	bool isChanged() const { return m_isChanged; }
 	bool isEmpty() const { return !m_food && m_ant.expired() && !m_isStone; }
 	uint32_t getFood() const { return m_food; }
 	bool isStone () const { return m_isStone; }
@@ -25,12 +26,14 @@ public:
 	void setAnt(const std::weak_ptr<Ant>& ant);
 	void removeAnt();
 	void setStone(bool isstone);
+	void clearChanged() { m_isChanged = false; }
 
 protected:
 	Position m_pos;
 	uint32_t m_food = 0;
 	std::weak_ptr<Ant> m_ant;
 	bool m_isStone = false;
+	bool m_isChanged = true;
 };
 
 };

@@ -8,3 +8,13 @@ Ant::Ant()
 {
 
 }
+
+std::weak_ptr<Player> Ant::player() const
+{
+	return m_player;
+}
+
+void Ant::setPlayer(std::weak_ptr<Player> player)
+{
+	m_player = player;
+}

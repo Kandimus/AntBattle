@@ -7,5 +7,5 @@
 #define ANT_BATTLE_LOG_EXPORT __declspec(dllimport)
 #endif
 #else
-#define ANT_BATTLE_LOG_PUBLIC_EXPORT
+#define ANT_BATTLE_LOG_EXPORT
 #endif // _WIN32

@@ -31,4 +31,4 @@ private:
 
 };
 
-ANT_BATTLE_LOG_EXPORT std::string format(const char *fmt, ...);
+std::string format(const char *fmt, ...);

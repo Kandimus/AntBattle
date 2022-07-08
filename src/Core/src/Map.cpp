@@ -1,5 +1,7 @@
 #include "Map.h"
 #include "Cell.h"
+#include "Ant.h"
+#include "Player.h"
 #include "Config.h"
 
 using namespace AntBattle;
@@ -21,9 +23,24 @@ Map::Map(const std::weak_ptr<Config>& conf)
 	}
 }
 
-void Map::generate()
+std::vector<std::shared_ptr<Ant>> Map::generate(const std::vector<std::shared_ptr<Player>>& players)
 {
+	std::vector<std::shared_ptr<Ant>> ants;
 
+	//TODO generate stone
+
+	//TODO generate food
+
+	//TODO generate ants
+
+	return ants;
+}
+
+void Map::clearChanged()
+{
+	for (auto& cell : m_map) {
+		cell->clearChanged();
+	}
 }
 
 void Map::incPosition(Position& pos, uint32_t x) const

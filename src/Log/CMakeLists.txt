@@ -11,5 +11,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC "include" "src")
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE})
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE -DANT_BATTLE_LOG_PUBLIC_DLL)
+#target_compile_definitions(${PROJECT_NAME} PRIVATE -DANT_BATTLE_LOG_PUBLIC_DLL)
 
