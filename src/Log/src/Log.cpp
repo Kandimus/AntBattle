@@ -4,6 +4,7 @@
 #include <fstream>
 #include "Log.h"
 
+ANT_BATTLE_LOG_EXPORT
 std::string format(const char *fmt, ...)
 {
 	va_list args;

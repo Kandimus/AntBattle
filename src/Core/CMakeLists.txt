@@ -8,5 +8,8 @@ file(GLOB SOURCE "src/*" "include/*")
 add_library(${PROJECT_NAME} STATIC "")
 
 target_include_directories(${PROJECT_NAME} PUBLIC "include" "src")
+target_include_directories(${PROJECT_NAME} PUBLIC "../json/include/nlohmann")
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json Log)

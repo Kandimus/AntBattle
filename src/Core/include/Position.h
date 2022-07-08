@@ -15,6 +15,7 @@ public:
 	uint32_t x() const { return m_x; }
 	uint32_t y() const { return m_y; }
 
+	void init(uint32_t x, uint32_t y) { m_x = x; m_y = y; }
 	void setX(uint32_t x) { m_x = x; }
 	void setY(uint32_t y) { m_y = y; }
 	void addX(uint32_t x) { m_x += x; }

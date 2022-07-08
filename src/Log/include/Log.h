@@ -2,6 +2,7 @@
 
 #include <mutex>
 #include <string>
+#include "export.h"
 
 namespace AntBattle {
 
@@ -29,3 +30,5 @@ private:
 };
 
 };
+
+ANT_BATTLE_LOG_EXPORT std::string format(const char *fmt, ...);

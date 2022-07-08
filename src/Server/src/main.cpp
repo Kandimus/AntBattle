@@ -1,9 +1,9 @@
 #include <iostream>
-#include "Map.h"
+#include "Battle.h"
 
 int main()
 {
-	AntBattle::Map map(100, 100);
+	AntBattle::Battle battle("test.conf");
 
 	std::cout << "Hello World!" << std::endl;
 	return 0;

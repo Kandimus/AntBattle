@@ -1,3 +1,5 @@
+add_subdirectory(json)
+
 add_subdirectory(Log)
 add_subdirectory(Ant)
 add_subdirectory(Player)

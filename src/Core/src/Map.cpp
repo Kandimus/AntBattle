@@ -1,12 +1,17 @@
 #include "Map.h"
 #include "Cell.h"
+#include "Config.h"
 
 using namespace AntBattle;
 
-Map::Map(uint32_t width, uint32_t height, const std::weak_ptr<Config>& config)
-	: m_size(width, height),
-	  m_config(config)
+Map::Map(const std::weak_ptr<Config>& conf)
+	: m_conf(conf)
 {
+	{
+		auto cfg = m_conf.lock();
+
+		m_size.init(cfg->width(), cfg->height());
+	}
 	m_map.resize(m_size.x() * m_size.y());
 
 	Position pos;
