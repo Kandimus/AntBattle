@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include "Direction.h"
 
 namespace AntBattle {
@@ -7,6 +8,7 @@ namespace AntBattle {
 
 enum CommandType
 {
+	Idle = 0,
 	Explore,
 	Move,
 	Eat,
@@ -18,7 +20,7 @@ enum CommandType
 	Defense,
 	CreateOfWorker,
 	CreateOfSolder,
-}
+};
 
 struct Command
 {

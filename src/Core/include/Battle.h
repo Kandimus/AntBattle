@@ -3,10 +3,18 @@
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <random>
+
 #include "Ant.h"
 #include "Map.h"
 
+#include "Command.h"
+#include "Direction.h"
+
 namespace AntBattle {
+
+using AntSharedPtr = std::shared_ptr<Ant>;
+using PlayerSharedPtr = std::shared_ptr<Player>;
 
 class Player;
 class Config;
@@ -22,13 +30,26 @@ public:
 protected:
 	std::vector<std::weak_ptr<Ant>> sortAnts();
 
+	void doAntCommand(AntSharedPtr& ant);
+	void commandAntExplore(AntSharedPtr& ant);
+
+	Direction randDirection();
+	Direction normalizeDirection(int val);
+	Position positionOffset(const Direction& dir);
+	std::vector<Direction> createDirectionArray(Direction dir);
+
+	void moveAnt(AntSharedPtr& ant, const Direction& dir);
+
 protected:
 	uint64_t m_uid;
 	std::shared_ptr<Config> m_conf;
 	std::unique_ptr<Map> m_map;
 
-	std::vector<std::shared_ptr<Player>> m_players;
-	std::vector<std::shared_ptr<Ant>> m_ants;
+	std::vector<PlayerSharedPtr> m_players;
+	std::vector<AntSharedPtr> m_ants;
+
+	std::random_device m_randDev;
+	std::mt19937 m_randGenerator;
 };
 
 };

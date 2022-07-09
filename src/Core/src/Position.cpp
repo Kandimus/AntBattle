@@ -8,8 +8,19 @@ Position::Position(const Position& pos)
 	m_y = pos.y();
 }
 
-Position::Position(uint32_t x, uint32_t y)
+Position::Position(int32_t x, int32_t y)
 {
 	m_x = x;
 	m_y = y;
+}
+
+
+Position& Position::operator+(const Position& p) const
+{
+	Position result(*this);
+
+	result.addX(p.x());
+	result.addY(p.y());
+
+	return result;
 }

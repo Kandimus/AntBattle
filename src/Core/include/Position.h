@@ -9,21 +9,23 @@ class Position
 public:
 	Position() = default;
 	Position(const Position& pos);
-	Position(uint32_t x, uint32_t y);
+	Position(int32_t x, int32_t y);
 	virtual ~Position() = default;
 
-	uint32_t x() const { return m_x; }
-	uint32_t y() const { return m_y; }
+	constexpr int32_t x() const { return m_x; }
+	constexpr int32_t y() const { return m_y; }
 
-	void init(uint32_t x, uint32_t y) { m_x = x; m_y = y; }
-	void setX(uint32_t x) { m_x = x; }
-	void setY(uint32_t y) { m_y = y; }
-	void addX(uint32_t x) { m_x += x; }
-	void addY(uint32_t y) { m_y += y; }
+	void init(int32_t x, int32_t y) { m_x = x; m_y = y; }
+	void setX(int32_t x) { m_x = x; }
+	void setY(int32_t y) { m_y = y; }
+	void addX(int32_t x) { m_x += x; }
+	void addY(int32_t y) { m_y += y; }
+
+	constexpr Position& operator+(const Position& p) const;
 
 private:
-	uint32_t m_x = 0;
-	uint32_t m_y = 0;
+	int32_t m_x = 0;
+	int32_t m_y = 0;
 };
 
 };

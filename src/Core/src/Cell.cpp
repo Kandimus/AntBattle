@@ -19,6 +19,7 @@ void Cell::setFood(uint32_t count)
 	} else {
 		//TODO Log
 	}
+	m_isChanged = true;
 }
 
 void Cell::setAnt(const std::weak_ptr<Ant>& ant)
@@ -28,13 +29,15 @@ void Cell::setAnt(const std::weak_ptr<Ant>& ant)
 	} else {
 		//TODO Log
 	}
+
+	m_isChanged = true;
 }
 
 void Cell::removeAnt()
 {
-	if (!m_ant.expired()) {
-		m_ant.reset();
-	}
+	m_ant.reset();
+
+	m_isChanged = true;
 }
 
 void Cell::setStone(bool isstone)
@@ -44,4 +47,6 @@ void Cell::setStone(bool isstone)
 	} else {
 		//TODO Log
 	}
+
+	m_isChanged = true;
 }

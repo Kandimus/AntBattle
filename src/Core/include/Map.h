@@ -28,11 +28,15 @@ public:
 
 	std::vector<std::shared_ptr<Ant>> generate(const std::vector<std::shared_ptr<Player>>& players);
 
+	bool isCellEmpty(const Position& pos) const;
+	bool isCellEmpty(int32_t x, int32_t y) const;
 	void clearChanged();
+
+	void moveAnt(const std::weak_ptr<Ant>& ant, const Position& pos);
 
 protected:
 	void incPosition(Position& pos, uint32_t x = 1) const;
-	uint32_t absPosition(Position& pos) const;
+	int32_t absPosition(const Position& pos) const;
 
 protected:
 	Position m_size;

@@ -36,11 +36,34 @@ std::vector<std::shared_ptr<Ant>> Map::generate(const std::vector<std::shared_pt
 	return ants;
 }
 
+bool Map::isCellEmpty(const Position& pos) const
+{
+	int32_t idx = absPosition(pos);
+
+	return idx >= 0 && idx < m_map.size() ? m_map[idx]->isEmpty() : false;
+}
+
+bool Map::isCellEmpty(int32_t x, int32_t y) const
+{
+	return isCellEmpty(Position(x, y));
+}
+
 void Map::clearChanged()
 {
 	for (auto& cell : m_map) {
 		cell->clearChanged();
 	}
+}
+
+void Map::moveAnt(const std::weak_ptr<Ant>& ant, const Position& pos)
+{
+	std::shared_ptr<Ant> pAnt = ant.lock();
+	int32_t old_idx = absPosition(pAnt->position());
+	int32_t new_idx = absPosition(pos);
+
+	m_map[new_idx]->setAnt(ant);
+	m_map[old_idx]->removeAnt();
+	pAnt->setPosition(pos);
 }
 
 void Map::incPosition(Position& pos, uint32_t x) const
@@ -53,7 +76,7 @@ void Map::incPosition(Position& pos, uint32_t x) const
 	}
 }
 
-uint32_t Map::absPosition(Position& pos) const
+int32_t Map::absPosition(const Position& pos) const
 {
 	return pos.x() + pos.y() * m_size.x();
 }

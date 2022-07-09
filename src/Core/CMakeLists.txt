@@ -9,6 +9,7 @@ add_library(${PROJECT_NAME} STATIC "")
 
 target_include_directories(${PROJECT_NAME} PUBLIC "include" "src")
 target_include_directories(${PROJECT_NAME} PUBLIC "../json/include/nlohmann")
+target_include_directories(${PROJECT_NAME} PUBLIC "../Interface/")
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE})
 

@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <string>
+#include <functional>
 
 namespace AntBattle {
 
