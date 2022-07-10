@@ -14,3 +14,13 @@ Player::Player(const std::string& libname) : m_libName(libname)
 
 	m_libHash = 0;
 }
+
+void Player::antQueen(const std::weak_ptr<Ant>& queen)
+{
+	m_antQueen = queen;
+}
+
+std::weak_ptr<Ant> Player::antQueen()
+{
+	return m_antQueen;
+}

@@ -32,11 +32,7 @@ protected:
 
 	void doAntCommand(AntSharedPtr& ant);
 	void commandAntExplore(AntSharedPtr& ant);
-
-	Direction randDirection();
-	Direction normalizeDirection(int val);
-	Position positionOffset(const Direction& dir);
-	std::vector<Direction> createDirectionArray(Direction dir);
+	void commandAntMove(AntSharedPtr& ant);
 
 	void moveAnt(AntSharedPtr& ant, const Direction& dir);
 
@@ -47,9 +43,6 @@ protected:
 
 	std::vector<PlayerSharedPtr> m_players;
 	std::vector<AntSharedPtr> m_ants;
-
-	std::random_device m_randDev;
-	std::mt19937 m_randGenerator;
 };
 
 };

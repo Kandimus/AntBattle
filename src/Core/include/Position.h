@@ -21,7 +21,9 @@ public:
 	void addX(int32_t x) { m_x += x; }
 	void addY(int32_t y) { m_y += y; }
 
-	constexpr Position& operator+(const Position& p) const;
+	bool operator==(const Position& p) const;
+	Position operator+(const Position& p) const;
+	Position operator-(const Position& p) const;
 
 private:
 	int32_t m_x = 0;
