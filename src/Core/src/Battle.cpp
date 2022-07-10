@@ -13,25 +13,33 @@ Battle::Battle(const std::string& confname, const std::vector<std::string>& play
 	m_conf = std::make_shared<Config>(confname);
 	m_map  = std::unique_ptr<Map>(new Map(m_conf));
 
-	Log::instance().put(format("create new battle. map is [%i x %i]", m_conf->width(), m_conf->height()));
-
-	for (auto& item : players) {
-		m_players.push_back(std::make_shared<Player>(item));
+	for (auto& libname : players) {
+		m_players.push_back(std::make_shared<Player>(libname));
 	}
 
-	m_ants = m_map->generate(m_players);
+	Log::instance().put(format("create new battle. map is [%i x %i]", m_conf->width(), m_conf->height()));
 }
 
 void Battle::run()
 {
 	//TODO check all players is init
+	for (auto& player : m_players) {
+		if (!player->isInit()) {
+			Log::instance().put("Can't start the battle. One player is not ready");
+			return;
+		}
+	}
 
 	//TODO create UID of battle
 
-	//TODO create temp list of all ant and randomize it
+	// create list of all ant
+	m_ants = m_map->generate(m_players);
 
 	// main loop
 	while(true) {
+		// randomize the list of ants
+		std::shuffle(m_ants.begin(), m_ants.end(), Math::randGenerator());
+
 		for (auto& ant : m_ants) {
 			std::weak_ptr<Player> plr = ant->player();
 			Command cmd;

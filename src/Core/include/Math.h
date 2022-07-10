@@ -10,7 +10,8 @@ namespace AntBattle {
 
 namespace Math {
 
-const std::mt19937& randGenerator();
+std::random_device& randDevice();
+std::mt19937& randGenerator();
 
 Direction randDirection();
 Direction normalizeDirection(int val);

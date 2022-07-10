@@ -6,8 +6,6 @@
 
 namespace AntBattle {
 
-typedef std::function<void(int)> AntProcess;
-
 enum AntType {
 	Black = 0,
 	Red,
@@ -15,12 +13,15 @@ enum AntType {
 
 struct PlayerInfo
 {
-	AntProcess processWorker;
-	AntProcess processSolder;
-	AntProcess processQueen;
-
 	AntType type;
 	std::string TeamName = "";
 };
+
+typedef void(*AntInit)(PlayerInfo*);
+typedef void(*AntFinalize)(void);
+typedef void(*AntProcess)(int);
+//typedef std::function<void(PlayerInfo*)> AntInit;
+//typedef std::function<void()> AntFinalize;
+//typedef std::function<void(int)> AntProcess;
 
 };

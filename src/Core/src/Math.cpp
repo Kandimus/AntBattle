@@ -9,7 +9,13 @@ namespace Math {
 std::random_device g_randDev;
 std::mt19937 g_randGenerator(g_randDev());
 
-const std::mt19937& randGenerator()
+std::random_device& randDevice()
+{
+	return g_randDev;
+}
+
+
+std::mt19937& randGenerator()
 {
 	return g_randGenerator;
 }
@@ -19,7 +25,7 @@ Direction randDirection()
 {
 	std::uniform_int_distribution<std::mt19937::result_type> dist0_7(0, 7);
 
-	return static_cast<Direction>(dist0_7(g_randGenerator));
+	return static_cast<Direction>(dist0_7(randGenerator()));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
