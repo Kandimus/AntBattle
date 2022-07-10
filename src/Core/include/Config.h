@@ -16,6 +16,7 @@ public:
 	uint32_t height();
 	double stoneOnMap();
 	double foodOnMap();
+	bool   isBordered();
 
 protected:
 	std::string m_filename;

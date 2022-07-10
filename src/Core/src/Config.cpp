@@ -33,3 +33,8 @@ double Config::foodOnMap()
 {
 	return m_conf["map"]["food"];
 }
+
+bool Config::isBordered()
+{
+	return m_conf["map"]["borders"];
+}
