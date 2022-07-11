@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdint.h>
 #include <memory>
 #include "Position.h"
 #include "Direction.h"
@@ -23,17 +24,22 @@ public:
 	};
 
 public:
-//	virtual bool toSearch(uint32_t count_iter) = 0;
-//	virtual bool toMove(Direction dir, uint32_t count_iter) = 0;
-//	virtual bool toAttack(Direction dir, uint32_t count_iter) = 0;
-//	virtual bool toEeat(Direction dir) = 0;
+	virtual void reset();
+
+	virtual uint32_t maxSatiety() const = 0;
+	virtual uint32_t maxHealth() const = 0;
+	virtual uint32_t maxAttack() const = 0;
+	virtual uint32_t maxVisibility() const = 0;
+
+	double satietyPercent();
+	double healtyPercent();
 
 	bool hasCommand() const { return m_command.type != CommandType::Idle; }
 	void setCommand(const Command& cmd);
 	Command& command();
 	void clearCommand();
 
-	constexpr const Position& position() const { return m_pos; }
+	const Position& position() const { return m_pos; }
 	void setPosition(const Position& pos);
 
 	std::weak_ptr<Player> player() const;
@@ -42,6 +48,7 @@ public:
 protected:
 	Position m_pos;
 	Status m_status;
+	bool m_isFight;
 	uint32_t m_satiety = 0;
 	uint32_t m_healty = 0;
 	uint32_t m_attack = 0;
@@ -50,7 +57,6 @@ protected:
 	Command m_command;
 	std::weak_ptr<Player> m_player;
 	AntProcess m_fnProcess;
-	bool m_isFight;
 };
 
 };

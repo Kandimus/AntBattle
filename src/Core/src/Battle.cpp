@@ -115,9 +115,9 @@ void Battle::moveAnt(AntSharedPtr& ant, const Direction& dir)
 	// get odered directions
 	std::vector<Direction> array_dir = Math::createDirectionArray(ant->command().direction);
 
-	while(array_dir.size()) {
+	for (auto& dir : array_dir) {
 		// get the new position as the ant position and the direction
-		Position newpos = ant->position() + Math::positionOffset(array_dir.back());
+		Position newpos = ant->position() + Math::positionOffset(dir);
 
 		// checking reachability of the new position
 		if (m_map->isCellEmpty(ant->position())) {
@@ -126,8 +126,7 @@ void Battle::moveAnt(AntSharedPtr& ant, const Direction& dir)
 			return;
 		}
 
-		// cell is not empty, delete this direction from the array and to check next
-		array_dir.pop_back();
+		// cell is not empty, go to next the direction and to check next
 	}
 
 	ant->clearCommand();

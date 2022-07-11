@@ -10,10 +10,10 @@ public:
 	AntWorker();
 	virtual ~AntWorker() = default;
 
+	virtual void reset() override;
 	virtual void takeFood();
 
-protected:
-	virtual uint32_t getMaxCargo() const = 0;
+	virtual uint32_t maxCargoFood() const = 0;
 
 protected:
 	uint32_t m_cargoFood = 0;

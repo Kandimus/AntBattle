@@ -6,7 +6,29 @@ Ant::Ant()
 	: m_pos()
 	, m_status(Status::Undef)
 {
+}
 
+void Ant::reset()
+{
+	m_status  = Status::Idle;
+	m_satiety = maxSatiety();
+	m_attack  = maxAttack();
+	m_healty  = maxHealth();
+	m_visibility = maxVisibility();
+
+	clearCommand();
+
+	m_isFight = false;
+}
+
+double Ant::satietyPercent()
+{
+	return maxSatiety() / m_satiety * 100.0;
+}
+
+double Ant::healtyPercent()
+{
+	return maxHealth() / m_healty * 100.0;
 }
 
 std::weak_ptr<Player> Ant::player() const
