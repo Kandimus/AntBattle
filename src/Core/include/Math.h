@@ -20,6 +20,7 @@ Position positionOffset(const Direction& dir);
 std::vector<Direction> createDirectionArray(const Direction& dir);
 Direction probabilisticDirection(const Direction& dir);
 Direction inverseDirection(const Direction& dir);
+std::vector<Position> visibleCells(const Position& pos, uint32_t visibility);
 
 };
 

@@ -14,3 +14,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "../Interface/")
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json Log Player Ant)
+
+if(TESTS_UNIT)
+    add_subdirectory(tests)
+endif(TESTS_UNIT)

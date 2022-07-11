@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
+option(TESTS_UNIT "Enable unit tests" ON)
+
 set(PROJECT server)
 
 project(${PROJECT} LANGUAGES CXX)

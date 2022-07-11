@@ -1,6 +1,7 @@
 #include "Math.h"
 
 #include <vector>
+#include <algorithm>
 
 namespace AntBattle {
 
@@ -171,6 +172,73 @@ Direction inverseDirection(const Direction& dir)
 		case Direction::NordWest:  return Direction::SouthEast;
 		default: return randDirection();
 	}
+}
+
+//TODO Need optimize this algorithm!!!!!!!!!!
+std::vector<Position> visibleCells(const Position& pos, uint32_t visibility)
+{
+	std::vector<Position> result;
+	int32_t vis = static_cast<int32_t>(visibility);
+	int dim_fill_square = static_cast<int>(std::sqrt(double(vis) * double(vis) / 2.0) + 0.5);
+
+	result.reserve(vis * vis);
+
+	for (int y = -dim_fill_square; y <= dim_fill_square; ++y) {
+		for (int x = -dim_fill_square; x <= dim_fill_square; ++x) {
+			result.push_back(pos + Position(x, y));
+		}
+	}
+
+	for (int y = -vis; y < -dim_fill_square; ++y) {
+		for (int x = -vis; x <= vis; ++x) {
+			int r = static_cast<int>(std::sqrt(double(x) * double(x) + double(y) * double(y)) + 0.5);
+
+			if (r <= vis) {
+				result.push_back(pos + Position(x, y));
+			}
+		}
+	}
+
+	for (int y = dim_fill_square + 1; y <= vis; ++y) {
+		for (int x = -vis; x <= vis; ++x) {
+			int r = static_cast<int>(std::sqrt(double(x) * double(x) + double(y) * double(y)) + 0.5);
+
+			if (r <= vis) {
+				result.push_back(pos + Position(x, y));
+			}
+		}
+	}
+
+	for (int x = -vis; x < -dim_fill_square; ++x) {
+		for (int y = -dim_fill_square + 1; y <= dim_fill_square - 1; ++y) {
+			int r = static_cast<int>(std::sqrt(double(x) * double(x) + double(y) * double(y)) + 0.5);
+
+			if (r <= vis) {
+				result.push_back(pos + Position(x, y));
+			}
+		}
+	}
+
+	for (int x = dim_fill_square + 1; x <= vis; ++x) {
+		for (int y = -dim_fill_square + 1; y <= dim_fill_square - 1; ++y) {
+			int r = static_cast<int>(std::sqrt(double(x) * double(x) + double(y) * double(y)) + 0.5);
+
+			if (r <= vis) {
+				result.push_back(pos + Position(x, y));
+			}
+		}
+	}
+
+	std::sort(result.begin(), result.end(), [](const Position& a, const Position& b) {
+		int64_t v1 = a.y();
+		int64_t v2 = b.y();
+
+		v1 = (v1 << 32) + a.x();
+		v2 = (v2 << 32) + b.x();
+		return v1 < v2;
+	});
+
+	return result;
 }
 
 }; // namespace Math
