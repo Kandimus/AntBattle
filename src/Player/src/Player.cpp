@@ -88,7 +88,7 @@ bool Player::isInit() const
 	return m_isInit;
 }
 
-void Player::antQueen(const std::weak_ptr<Ant>& queen)
+void Player::setAntQueen(const std::weak_ptr<Ant>& queen)
 {
 	m_antQueen = queen;
 }

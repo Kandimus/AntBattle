@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+#include <string>
+
 namespace AntBattle {
 
 class Position
@@ -24,6 +26,14 @@ public:
 	bool operator==(const Position& p) const;
 	Position operator+(const Position& p) const;
 	Position operator-(const Position& p) const;
+	Position operator*(uint32_t len) const;
+
+	void operator+=(const Position& p);
+	void operator-=(const Position& p);
+	void operator+=(uint32_t val);
+	void operator-=(uint32_t val);
+
+	std::string toString() const;
 
 private:
 	int32_t m_x = 0;

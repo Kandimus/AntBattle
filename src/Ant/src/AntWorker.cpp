@@ -2,14 +2,9 @@
 
 using namespace AntBattle;
 
-AntWorker::AntWorker()
-{
-
-}
-
 void AntWorker::reset()
 {
-	m_cargoFood = maxCargoFood();
+	m_cargoFood = 0;
 
 	Ant::reset();
 }

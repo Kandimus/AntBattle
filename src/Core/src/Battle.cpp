@@ -23,12 +23,12 @@ Battle::Battle(const std::string& confname, const std::vector<std::string>& play
 void Battle::run()
 {
 	//TODO check all players is init
-	for (auto& player : m_players) {
-		if (!player->isInit()) {
-			Log::instance().put("Can't start the battle. One player is not ready");
-			return;
-		}
-	}
+//	for (auto& player : m_players) {
+//		if (!player->isInit()) {
+//			Log::instance().put("Can't start the battle. One player is not ready");
+//			return;
+//		}
+//	}
 
 	//TODO create UID of battle
 

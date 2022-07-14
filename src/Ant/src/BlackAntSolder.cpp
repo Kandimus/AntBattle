@@ -1,8 +1,7 @@
-#include "BlackSolder.h"
+#include "BlackAntSolder.h"
 
 using namespace AntBattle;
 
 BlackAntSolder::BlackAntSolder()
-	: AntSolder()
 {
 }

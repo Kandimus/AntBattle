@@ -1,4 +1,4 @@
-#include "BlackWorker.h"
+#include "BlackAntWorker.h"
 
 using namespace AntBattle;
 

@@ -3,6 +3,8 @@
 //#include "../../catchtest/catch.hpp"
 
 #include "Math.h"
+#include "Map.h"
+//#include "Config.h"
 
 //TEST_CASE("Test visibleCells function", "[Math]")
 //{
@@ -23,6 +25,14 @@
 //		//REQUIRE(ss("var.test_dens.value"));
 //		CHECK(array_1.size() == 177);
 //	}
+//}
+
+//void checkNearAvaliblePosition()
+//{
+//	auto conf = std::make_shared<AntBattle::Config>("test_nearavalibleposition.conf");
+//	AntBattle::Map map(conf);
+
+//	map.nearAvaliblePosition(AntBattle::Position(25, 25));
 //}
 
 bool checkDuble(const std::vector<AntBattle::Position>& array)

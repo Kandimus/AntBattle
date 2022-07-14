@@ -1,19 +1,44 @@
 #include "Map.h"
+
+#include "Log.h"
+#include "Math.h"
 #include "Cell.h"
-#include "Ant.h"
 #include "Player.h"
 #include "Config.h"
 
+#include "Ant.h"
+#include "BlackAntQueen.h"
+#include "BlackAntSolder.h"
+#include "BlackAntWorker.h"
+
 using namespace AntBattle;
+
+using SharedAnt = std::shared_ptr<Ant>;
+using VectorSharedAnt = std::vector<std::shared_ptr<Ant>>;
 
 Map::Map(const std::weak_ptr<Config>& conf)
 	: m_conf(conf)
 {
+	uint32_t w = 0;
+	uint32_t h = 0;
+
 	{
 		auto cfg = m_conf.lock();
-
-		m_size.init(cfg->width(), cfg->height());
+		w   = cfg->width();
+		h   = cfg->height();
 	}
+
+	if (w < m_minWidth) {
+		w = m_minWidth;
+		Log::instance().put(format("Set width = %i", w));
+	}
+
+	if (h < m_minHeight) {
+		h = m_minHeight;
+		Log::instance().put(format("Set height = %i", h));
+	}
+
+	m_size.init(w, h);
 	m_map.resize(m_size.x() * m_size.y());
 
 	Position pos;
@@ -21,25 +46,96 @@ Map::Map(const std::weak_ptr<Config>& conf)
 		cell = std::make_shared<Cell>(pos);
 		incPosition(pos);
 	}
+
+	Log::instance().put(format("Create map [%i x %i]", m_size.x(), m_size.y()));
 }
 
-std::vector<std::shared_ptr<Ant>> Map::generate(const std::vector<std::shared_ptr<Player>>& players)
+VectorSharedAnt Map::generate(const std::vector<std::shared_ptr<Player>>& players)
 {
-	std::vector<std::shared_ptr<Ant>> ants;
+	VectorSharedAnt ants;
+	auto conf = m_conf.lock();
+
+	// countCell = m_map.size();
 
 	//TODO generate stone
 
 	//TODO generate food
 
 	//TODO generate ants
+	for (auto& player : players) {
+		Position posQueen(Math::random(0, m_size.x()), Math::random(0, m_size.y()));
+
+		posQueen = nearAvaliblePosition(posQueen);
+
+		// do place Queen
+		auto queen = createPlayerQueenAnt(player);
+		queen->setPosition(posQueen);
+		queen->reset();
+		player->setAntQueen(queen);
+		m_map[absPosition(posQueen)]->setAnt(queen);
+		ants.push_back(queen);
+
+		// do place workers
+		for (int ii = 0; ii < conf->workerCountOfStart(); ++ii) {
+			Position pos(Math::random(0, m_startingSquare * 2 + 1), Math::random(0, m_startingSquare * 2 + 1));
+			pos -= (m_startingSquare + 1);
+			pos += posQueen;
+			pos = nearAvaliblePosition(pos);
+
+			auto worker = createPlayerWorkerAnt(player);
+			worker->setPosition(pos);
+			worker->reset();
+			m_map[absPosition(pos)]->setAnt(worker);
+			ants.push_back(worker);
+		}
+
+		// do place workers
+		for (int ii = 0; ii < conf->solderCountOfStart(); ++ii) {
+			Position pos(Math::random(0, m_startingSquare * 2 + 1), Math::random(0, m_startingSquare * 2 + 1));
+			pos -= (m_startingSquare + 1);
+			pos += posQueen;
+			pos = nearAvaliblePosition(pos);
+
+			auto solder = createPlayerSolderAnt(player);
+			solder->setPosition(pos);
+			solder->reset();
+			m_map[absPosition(pos)]->setAnt(solder);
+			ants.push_back(solder);
+		}
+	}
 
 	return ants;
+}
+
+std::shared_ptr<Ant> Map::createPlayerQueenAnt(std::shared_ptr<Player> player) const
+{
+	switch (player->antType()) {
+		case AntType::Black: return std::make_shared<BlackAntQueen>();
+		case AntType::Red: return std::make_shared<BlackAntQueen>();
+	}
+}
+
+std::shared_ptr<Ant> Map::createPlayerSolderAnt(std::shared_ptr<Player> player) const
+{
+	switch (player->antType()) {
+		case AntType::Black: return std::make_shared<BlackAntSolder>();
+		case AntType::Red: return std::make_shared<BlackAntSolder>();
+	}
+}
+
+std::shared_ptr<Ant> Map::createPlayerWorkerAnt(std::shared_ptr<Player> player) const
+{
+	switch (player->antType()) {
+		case AntType::Black: return std::make_shared<BlackAntWorker>();
+		case AntType::Red: return std::make_shared<BlackAntWorker>();
+	}
 }
 
 bool Map::isCellEmpty(const Position& pos) const
 {
 	int32_t idx = absPosition(pos);
 
+	//TODO need support on unboarding map
 	return idx >= 0 && idx < m_map.size() ? m_map[idx]->isEmpty() : false;
 }
 
@@ -55,9 +151,54 @@ void Map::clearChanged()
 	}
 }
 
+Position Map::nearAvaliblePosition(const Position& pos) const
+{
+	Position curPos = pos;
+	uint32_t len = 1;
+	uint32_t count = 0;
+	Direction dir = Math::randDirection();
+	Position addPos = Math::positionOffset(dir);
+
+	if (isCellEmpty(curPos)) {
+		return pos;
+	}
+
+	curPos += addPos;
+	++count;
+
+	// to rotate at clockwise to angle 90
+	if (static_cast<int>(dir) % 2) {
+		dir = Math::normalizeDirection(static_cast<int>(dir) + 1);
+	}
+
+	// to rotate at clockwise to next angle 90 and get new offset
+	dir = Math::normalizeDirection(static_cast<int>(dir) + 2);
+	addPos = Math::positionOffset(dir);
+
+	while(!isCellEmpty(curPos)) {
+		if (count >= 8 * len) {
+			++len;
+			// to rotate at counter-clockwise
+			Direction cc_dir = Math::normalizeDirection(static_cast<int>(dir) - 2);
+			curPos += Math::positionOffset(cc_dir);
+			count = 0;
+		}
+
+		if (std::abs(curPos.x() + addPos.x()) > len || std::abs(curPos.y() + addPos.y()) > len) {
+			dir = Math::normalizeDirection(static_cast<int>(dir) + 2);
+			addPos = Math::positionOffset(dir);
+		}
+
+		++count;
+		curPos += addPos;
+	}
+
+	return curPos;
+}
+
 void Map::moveAnt(const std::weak_ptr<Ant>& ant, const Position& pos)
 {
-	std::shared_ptr<Ant> pAnt = ant.lock();
+	SharedAnt pAnt = ant.lock();
 	int32_t old_idx = absPosition(pAnt->position());
 	int32_t new_idx = absPosition(pos);
 

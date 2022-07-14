@@ -22,7 +22,9 @@ public:
 
 	bool isInit() const;
 
-	void antQueen(const std::weak_ptr<Ant>& queen);
+	AntType antType() const { return m_info.type; }
+
+	void setAntQueen(const std::weak_ptr<Ant>& queen);
 	std::weak_ptr<Ant> antQueen();
 
 protected:
@@ -35,11 +37,11 @@ protected:
 	bool m_isInit = false;
 
 	void* m_handleLib = nullptr;
-	AntInit    m_fnInit;
-	AntFinalize m_fnFinalize;
-	AntProcess m_fnWorkerProcess;
-	AntProcess m_fnSolderProcess;
-	AntProcess m_fnQueenProcess;
+	AntInit     m_fnInit = nullptr;
+	AntFinalize m_fnFinalize = nullptr;
+	AntProcess  m_fnWorkerProcess = nullptr;
+	AntProcess  m_fnSolderProcess = nullptr;
+	AntProcess  m_fnQueenProcess = nullptr;
 
 	std::weak_ptr<Ant> m_antQueen;
 };

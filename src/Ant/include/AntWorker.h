@@ -7,11 +7,11 @@ namespace AntBattle {
 class AntWorker : public Ant
 {
 public:
-	AntWorker();
+	AntWorker() = default;
 	virtual ~AntWorker() = default;
 
 	virtual void reset() override;
-	virtual void takeFood();
+//	virtual void takeFood();
 
 	virtual uint32_t maxCargoFood() const = 0;
 

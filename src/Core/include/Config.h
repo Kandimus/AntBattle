@@ -18,6 +18,9 @@ public:
 	double foodOnMap();
 	bool   isBordered();
 
+	uint32_t workerCountOfStart();
+	uint32_t solderCountOfStart();
+
 protected:
 	std::string m_filename;
 	nlohmann::json m_conf;

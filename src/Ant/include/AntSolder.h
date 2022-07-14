@@ -7,7 +7,7 @@ namespace AntBattle {
 class AntSolder : public Ant
 {
 public:
-	AntSolder();
+	AntSolder() = default;
 	virtual ~AntSolder() = default;
 };
 

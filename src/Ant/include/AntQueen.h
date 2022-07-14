@@ -7,7 +7,7 @@ namespace AntBattle {
 class AntQueen : public Ant
 {
 public:
-	AntQueen();
+	AntQueen() = default;
 	virtual ~AntQueen() = default;
 
 	virtual uint32_t maxTurnForWorker() const = 0;

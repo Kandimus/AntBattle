@@ -32,16 +32,26 @@ public:
 	bool isCellEmpty(int32_t x, int32_t y) const;
 	void clearChanged();
 
+	Position nearAvaliblePosition(const Position& pos) const;
+
 	void moveAnt(const std::weak_ptr<Ant>& ant, const Position& pos);
 
 protected:
 	void incPosition(Position& pos, uint32_t x = 1) const;
 	int32_t absPosition(const Position& pos) const;
 
+	std::shared_ptr<Ant> createPlayerQueenAnt(std::shared_ptr<Player> player) const;
+	std::shared_ptr<Ant> createPlayerSolderAnt(std::shared_ptr<Player> player) const;
+	std::shared_ptr<Ant> createPlayerWorkerAnt(std::shared_ptr<Player> player) const;
+
 protected:
 	Position m_size;
 	std::vector<std::shared_ptr<Cell>> m_map;
 	std::weak_ptr<Config> m_conf;
+
+	const uint32_t m_startingSquare = 10;
+	const uint32_t m_minWidth = 50;
+	const uint32_t m_minHeight = 50;
 };
 
 };
