@@ -14,7 +14,7 @@ enum AntType {
 struct PlayerInfo
 {
 	AntType type;
-	std::string TeamName = "";
+	std::string teamName = "";
 };
 
 typedef void(*AntInit)(PlayerInfo*);

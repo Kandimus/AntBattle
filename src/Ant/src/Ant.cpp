@@ -13,7 +13,7 @@ void Ant::reset()
 	m_status  = Status::Idle;
 	m_satiety = maxSatiety();
 	m_attack  = maxAttack();
-	m_healty  = maxHealth();
+	m_health  = maxHealth();
 	m_visibility = maxVisibility();
 
 	clearCommand();
@@ -26,9 +26,9 @@ double Ant::satietyPercent()
 	return maxSatiety() / m_satiety * 100.0;
 }
 
-double Ant::healtyPercent()
+double Ant::healthPercent()
 {
-	return maxHealth() / m_healty * 100.0;
+	return maxHealth() / m_health * 100.0;
 }
 
 std::weak_ptr<Player> Ant::player() const

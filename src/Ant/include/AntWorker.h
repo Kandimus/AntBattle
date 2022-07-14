@@ -10,6 +10,8 @@ public:
 	AntWorker() = default;
 	virtual ~AntWorker() = default;
 
+	virtual std::string strType() const override { return "worker"; }
+
 	virtual void reset() override;
 //	virtual void takeFood();
 

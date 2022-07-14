@@ -21,6 +21,7 @@ public:
 
 	std::weak_ptr<Cell> cell(Position pos) const;
 	std::weak_ptr<Cell> cell(uint32_t x, uint32_t y) const;
+	std::weak_ptr<Cell> cell(uint32_t offset) const;
 
 	const Position& size() const;
 	uint32_t sizeX() const;

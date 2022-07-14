@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <memory>
+#include <string>
 #include "Position.h"
 #include "Direction.h"
 #include "PlayerInfo.h"
@@ -30,9 +31,10 @@ public:
 	virtual uint32_t maxHealth() const = 0;
 	virtual uint32_t maxAttack() const = 0;
 	virtual uint32_t maxVisibility() const = 0;
+	virtual std::string strType() const = 0;
 
 	double satietyPercent();
-	double healtyPercent();
+	double healthPercent();
 
 	bool hasCommand() const { return m_command.type != CommandType::Idle; }
 	void setCommand(const Command& cmd);
@@ -50,7 +52,7 @@ protected:
 	Status m_status;
 	bool m_isFight;
 	uint32_t m_satiety = 0;
-	uint32_t m_healty = 0;
+	uint32_t m_health = 0;
 	uint32_t m_attack = 0;
 	uint32_t m_visibility = 0;
 

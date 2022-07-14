@@ -234,6 +234,11 @@ std::weak_ptr<Cell> Map::cell(uint32_t x, uint32_t y) const
 	return cell(Position(x, y));
 }
 
+std::weak_ptr<Cell> Map::cell(uint32_t offset) const
+{
+	return (offset < m_map.size()) ? m_map[offset] : nullptr;
+}
+
 const Position& Map::size() const
 {
 	return m_size;

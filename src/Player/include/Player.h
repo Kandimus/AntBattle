@@ -23,6 +23,7 @@ public:
 	bool isInit() const;
 
 	AntType antType() const { return m_info.type; }
+	std::string teamName() const { return m_info.teamName; }
 
 	void setAntQueen(const std::weak_ptr<Ant>& queen);
 	std::weak_ptr<Ant> antQueen();
