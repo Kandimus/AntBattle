@@ -1,21 +1,28 @@
+#include "Battle.h"
+
 #include "Log.h"
 #include "Config.h"
 
 #include "Math.h"
 #include "Map.h"
 #include "Player.h"
-#include "Battle.h"
+
+#include "BattleLogService.h"
+#include "FileProvider.h"
 
 using namespace AntBattle;
 
 Battle::Battle(const std::string& confname, const std::vector<std::string>& players)
 {
 	m_conf = std::make_shared<Config>(confname);
-	m_map  = std::unique_ptr<Map>(new Map(m_conf));
+	m_map  = std::make_shared<Map>(m_conf);
 
+	uint32_t player_index = 0;
 	for (auto& libname : players) {
-		m_players.push_back(std::make_shared<Player>(libname));
+		m_players.push_back(std::make_shared<Player>(player_index++, libname));
 	}
+
+	m_logService.add(std::make_shared<FileProvider>("test_battle.json"));
 
 	Log::instance().put(format("create new battle. map is [%i x %i]", m_conf->width(), m_conf->height()));
 }
@@ -35,8 +42,17 @@ void Battle::run()
 	// create list of all ant
 	m_ants = m_map->generate(m_players);
 
+	// send of starting info
+	for (auto& player : m_players) {
+		m_logService.savePlayer(player);
+	}
+	m_logService.saveMap(m_map);
+
 	// main loop
 	while(true) {
+		// clear IsChange flag
+		m_map->clearChanged();
+
 		// randomize the list of ants
 		std::shuffle(m_ants.begin(), m_ants.end(), Math::randGenerator());
 

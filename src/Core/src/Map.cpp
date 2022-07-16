@@ -72,6 +72,7 @@ VectorSharedAnt Map::generate(const std::vector<std::shared_ptr<Player>>& player
 		queen->setPosition(posQueen);
 		queen->reset();
 		player->setAntQueen(queen);
+		queen->setPlayer(player);
 		m_map[absPosition(posQueen)]->setAnt(queen);
 		ants.push_back(queen);
 
@@ -85,6 +86,7 @@ VectorSharedAnt Map::generate(const std::vector<std::shared_ptr<Player>>& player
 			auto worker = createPlayerWorkerAnt(player);
 			worker->setPosition(pos);
 			worker->reset();
+			worker->setPlayer(player);
 			m_map[absPosition(pos)]->setAnt(worker);
 			ants.push_back(worker);
 		}
@@ -99,6 +101,7 @@ VectorSharedAnt Map::generate(const std::vector<std::shared_ptr<Player>>& player
 			auto solder = createPlayerSolderAnt(player);
 			solder->setPosition(pos);
 			solder->reset();
+			solder->setPlayer(player);
 			m_map[absPosition(pos)]->setAnt(solder);
 			ants.push_back(solder);
 		}

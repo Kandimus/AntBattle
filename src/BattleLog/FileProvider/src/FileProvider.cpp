@@ -1,35 +1,75 @@
 #include "FileProvider.h"
 
 #include <fstream>
+#include "json.hpp"
 
+#include "Log.h"
 #include "Map.h"
 #include "Cell.h"
 #include "Ant.h"
 #include "Player.h"
-
-#include "json.hpp"
 
 using namespace AntBattle;
 
 class Map;
 
 FileProvider::FileProvider(const std::string& filename)
+	: m_filename(filename)
 {
+	std::ofstream file(m_filename);
 
+	if (!file.is_open()) {
+		if (!m_cantOpen) {
+			Log::instance().put(format("Error: Can not open the '%s' log file!", m_filename.c_str()));
+			m_cantOpen = true;
+		}
+		return;
+	}
 }
 
-
-void FileProvider::toSave(const std::weak_ptr<Map>& map)
+void FileProvider::savePlayer(const std::weak_ptr<Player>& player)
 {
+	auto pPlayer = player.lock();
+	std::ofstream file(m_filename, std::ios::app);
+
+	if (!file.is_open()) {
+		if (!m_cantOpen) {
+			Log::instance().put(format("Error: Can not open the '%s' log file!", m_filename.c_str()));
+			m_cantOpen = true;
+		}
+		return;
+	}
+
 	nlohmann::json json;
+
+	json["player"]["index"] = pPlayer->index();
+	json["player"]["team"] = pPlayer->teamName();
+	json["player"]["type"] = pPlayer->antType();
+	json["player"]["library"]["filename"] = pPlayer->library();
+	json["player"]["library"]["hash"] = pPlayer->libHash();
+	json["player"]["library"]["version"] = pPlayer->libVersion();
+
+	file << json << std::endl;
+	file.close();
+}
+
+void FileProvider::saveMap(const std::weak_ptr<Map>& map)
+{
 	auto pMap = map.lock();
+	std::ofstream file(m_filename, std::ios::app);
 
-
-	//TODO check for first iteration
+	if (!file.is_open()) {
+		if (!m_cantOpen) {
+			Log::instance().put(format("Error: Can not open the '%s' log file!", m_filename.c_str()));
+			m_cantOpen = true;
+		}
+		return;
+	}
 
 	uint32_t size = pMap->size().x() * pMap->size().y();
 	for (int ii = 0; ii < size; ++ii) {
 		auto pCell = pMap->cell(ii).lock();
+		nlohmann::json json;
 
 		if (!pCell->isChanged()) {
 			continue;
@@ -46,19 +86,15 @@ void FileProvider::toSave(const std::weak_ptr<Map>& map)
 			auto pAnt = pCell->ant().lock();
 			auto pPlayer = pAnt->player().lock();
 
-			json["cell"]["type"]["ant"]["type"] = pAnt->strType();
-			json["cell"]["type"]["ant"]["x"] = pAnt->position().x();
-			json["cell"]["type"]["ant"]["x"] = pAnt->position().y();
-			json["cell"]["type"]["ant"]["player"] = pPlayer->teamName();
-			json["cell"]["type"]["ant"]["health"] = pAnt->healthPercent();
+			json["cell"]["type"] = "ant";
+			json["cell"]["ant"]["type"] = pAnt->strType();
+			json["cell"]["ant"]["player"] = pPlayer->index();
+			json["cell"]["ant"]["health"] = pAnt->healthPercent();
 		}
+
+		file << json << std::endl;
 	}
 
-	std::ofstream file(m_filename);
-
-	if (file.is_open()) {
-		file << json;
-		file.close();
-	}
+	file.close();
 }
 

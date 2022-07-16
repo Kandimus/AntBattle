@@ -4,8 +4,6 @@
 
 namespace AntBattle {
 
-class Map;
-
 class FileProvider : public IBattleLogProvider
 {
 public:
@@ -13,11 +11,12 @@ public:
 	virtual ~FileProvider() = default;
 
 
-	void toSave(const std::weak_ptr<Map>& map) override;
+	void savePlayer(const std::weak_ptr<Player>& player) override;
+	void saveMap(const std::weak_ptr<Map>& map) override;
 
 protected:
 	std::string m_filename = "";
-
+	bool m_cantOpen = false;
 };
 
 };

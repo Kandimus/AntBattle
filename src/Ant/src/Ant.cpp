@@ -3,7 +3,7 @@
 using namespace AntBattle;
 
 Ant::Ant()
-	: m_pos()
+	: m_pos(0, 0)
 	, m_status(Status::Undef)
 {
 }

@@ -10,6 +10,7 @@
 
 #include "Command.h"
 #include "Direction.h"
+#include "BattleLogService.h"
 
 namespace AntBattle {
 
@@ -39,10 +40,12 @@ protected:
 protected:
 	uint64_t m_uid;
 	std::shared_ptr<Config> m_conf;
-	std::unique_ptr<Map> m_map;
+	std::shared_ptr<Map> m_map;
 
 	std::vector<PlayerSharedPtr> m_players;
 	std::vector<AntSharedPtr> m_ants;
+
+	BattleLogService m_logService;
 };
 
 };

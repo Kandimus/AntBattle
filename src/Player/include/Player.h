@@ -13,7 +13,7 @@ class Ant;
 class Player
 {
 public:
-	Player(const std::string& libname);
+	Player(uint32_t index, const std::string& libname);
 	virtual ~Player();
 
 //	void/*Command*/ doWorkerProcess(/*PlayerInfo*/);
@@ -22,8 +22,13 @@ public:
 
 	bool isInit() const;
 
+	uint32_t index() const { return m_index; }
+	const std::string& library() const { return m_libName; }
+	uint32_t libHash() const { return m_libHash; }
+
 	AntType antType() const { return m_info.type; }
-	std::string teamName() const { return m_info.teamName; }
+	const std::string& teamName() const { return m_info.teamName; }
+	const std::string& libVersion() const { return m_info.version; }
 
 	void setAntQueen(const std::weak_ptr<Ant>& queen);
 	std::weak_ptr<Ant> antQueen();
@@ -35,6 +40,7 @@ protected:
 	std::string m_libName = "";
 	uint32_t m_libHash = 0;
 	PlayerInfo m_info;
+	uint32_t m_index = 0;
 	bool m_isInit = false;
 
 	void* m_handleLib = nullptr;

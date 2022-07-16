@@ -11,4 +11,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC "include" "src")
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json IBattleLogProvider Player)
+target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json Log IBattleLogProvider Player)

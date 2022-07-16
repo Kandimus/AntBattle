@@ -4,6 +4,8 @@
 #include <string>
 #include <functional>
 
+#include "ApiVersion.h"
+
 namespace AntBattle {
 
 enum AntType {
@@ -15,6 +17,8 @@ struct PlayerInfo
 {
 	AntType type;
 	std::string teamName = "";
+	std::string version = "";
+	ApiVersion apiVersion = 0;
 };
 
 typedef void(*AntInit)(PlayerInfo*);
