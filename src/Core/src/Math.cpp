@@ -170,6 +170,12 @@ Direction directionTo(const Position& posFrom, const Position& posTo)
 	}
 }
 
+uint32_t distanceTo(const Position& posFrom, const Position& posTo)
+{
+	Position pos = posTo - posFrom;
+	return static_cast<uint32_t>(std::sqrt(double(pos.x()) * double(pos.x()) + double(pos.y()) * double(pos.y())) + 0.5);
+}
+
 /// \brief Create the priority array of direction.
 ///
 /// The array will sorted by priority of select direction, from selected to reverse direction.

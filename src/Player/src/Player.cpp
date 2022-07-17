@@ -89,6 +89,11 @@ bool Player::loadLibrary()
 	return false;
 }
 
+void Player::changeTeamName(uint32_t count)
+{
+	m_info.teamName += format(" #%u", count);
+}
+
 bool Player::isInit() const
 {
 	return m_isInit;

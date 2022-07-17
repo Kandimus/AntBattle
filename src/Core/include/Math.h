@@ -6,6 +6,8 @@
 #include "Position.h"
 #include "Direction.h"
 
+#include "AntInfo.h"
+
 namespace AntBattle {
 
 namespace Math {
@@ -32,6 +34,7 @@ Direction randDirection();
 Direction normalizeDirection(int val);
 
 Direction directionTo(const Position& posFrom, const Position& posTo);
+uint32_t distanceTo(const Position& posFrom, const Position& posTo);
 
 Position randomPositionByDirection(const Direction& dir, uint32_t len);
 

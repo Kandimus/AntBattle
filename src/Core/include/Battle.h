@@ -37,7 +37,10 @@ protected:
 
 	void moveAnt(AntSharedPtr& ant, const Direction& dir);
 
+	void generateAntInfo(AntSharedPtr& ant, AntInfo& ai);
+
 protected:
+	bool m_isInit = false;
 	uint64_t m_uid;
 	std::shared_ptr<Config> m_conf;
 	std::shared_ptr<Map> m_map;

@@ -1,15 +1,34 @@
 #include <iostream>
 #include "Battle.h"
 #include "Math.h"
+#include "simpleargs.h"
 
-int main()
+namespace Arg {
+	const std::string Config = "config";
+	const char Config_short = 'c';
+}
+
+
+
+int main(int argc, const char **argv)
 {
-	for (int ii = 0; ii < 20; ++ii) {
-		std::cout << AntBattle::Math::random(0, RAND_MAX) << std::endl;
+	rSimpleArgs::instance()
+		.addOption(Arg::Config, Arg::Config_short, "");
+
+	rSimpleArgs::instance().parse(argc, argv);
+
+	if (rSimpleArgs::instance().getOption(Arg::Config).empty()) {
+		std::cout << "Do not selected configuration file!" << std::endl;
+		return 1;
 	}
 
-	std::vector<std::string> plr_list = {"red.dll", "black.dll"};
-	AntBattle::Battle battle("test.conf", plr_list);
+	std::vector<std::string> plr_list;
+
+	for (int ii = 0; ii < rSimpleArgs::instance().getCountArgument(); ++ii) {
+		plr_list.push_back(rSimpleArgs::instance().getArgument(ii));
+	}
+
+	AntBattle::Battle battle(rSimpleArgs::instance().getOption(Arg::Config), plr_list);
 
 	battle.run();
 

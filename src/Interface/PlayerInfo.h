@@ -5,13 +5,10 @@
 #include <functional>
 
 #include "ApiVersion.h"
+#include "Command.h"
+#include "AntInfo.h"
 
 namespace AntBattle {
-
-enum AntType {
-	Black = 0,
-	Red,
-};
 
 struct PlayerInfo
 {
@@ -23,9 +20,6 @@ struct PlayerInfo
 
 typedef void(*AntInit)(PlayerInfo*);
 typedef void(*AntFinalize)(void);
-typedef void(*AntProcess)(int);
-//typedef std::function<void(PlayerInfo*)> AntInit;
-//typedef std::function<void()> AntFinalize;
-//typedef std::function<void(int)> AntProcess;
+typedef void(*AntProcess)(AntInfo*, Command*);
 
 };

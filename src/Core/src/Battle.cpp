@@ -5,6 +5,7 @@
 
 #include "Math.h"
 #include "Map.h"
+#include "Cell.h"
 #include "Player.h"
 
 #include "BattleLogService.h"
@@ -17,25 +18,43 @@ Battle::Battle(const std::string& confname, const std::vector<std::string>& play
 	m_conf = std::make_shared<Config>(confname);
 	m_map  = std::make_shared<Map>(m_conf);
 
+	// create the player list
 	uint32_t player_index = 0;
 	for (auto& libname : players) {
 		m_players.push_back(std::make_shared<Player>(player_index++, libname));
 	}
 
+	for (auto& player : m_players) {
+		if (!player->isInit()) {
+			Log::instance().put(format("Player '%s' [%s] is not initiliazed", player->teamName().c_str(), player->library().c_str()));
+			return;
+		}
+	}
+
+	// check players names
+	for (int ii = 0; ii < m_players.size() - 1; ++ii) {
+		uint32_t count = 1;
+
+		for (int jj = ii + 1; jj < m_players.size(); ++jj) {
+			if (m_players[ii]->teamName() == m_players[jj]->teamName()) {
+				m_players[jj]->changeTeamName(count++);
+			}
+		}
+	}
+
 	m_logService.add(std::make_shared<FileProvider>("test_battle.json"));
 
 	Log::instance().put(format("create new battle. map is [%i x %i]", m_conf->width(), m_conf->height()));
+
+	m_isInit = true;
 }
 
 void Battle::run()
 {
-	//TODO check all players is init
-//	for (auto& player : m_players) {
-//		if (!player->isInit()) {
-//			Log::instance().put("Can't start the battle. One player is not ready");
-//			return;
-//		}
-//	}
+	if (!m_isInit) {
+		Log::instance().put("Can't start the battle. Battle is not initialized");
+		return;
+	}
 
 	//TODO create UID of battle
 
@@ -148,3 +167,32 @@ void Battle::moveAnt(AntSharedPtr& ant, const Direction& dir)
 	ant->clearCommand();
 }
 
+void Battle::generateAntInfo(AntSharedPtr& ant, AntInfo& ai)
+{
+	auto visible = Math::visibleCells(ant->position(), ant->maxVisibility());
+	auto owner = ant->player().lock();
+	auto quuen = owner->antQueen().lock();
+	std::vector<const Position*> pos_food;
+	std::vector<const Position*> pos_enemy;
+
+	ai = {};
+	ai.healthPrecent = ant->healthPercent();
+	ai.satietyPrecent = ant->satietyPercent();
+	//TODO dynamic_cast to WorkerAnt and check cargo
+//	ai.directionToQueen = Math::directionTo(ant->position(), quuen->position());
+	ai.distanceToQueen = Math::distanceTo(ant->position(), quuen->position());
+	ai.distanceToLabel = 0; //TODO fix it
+
+	for (auto& pos : visible) {
+		auto cell = m_map->cell(pos).lock();
+
+		if (cell->isEmpty()) {
+			continue;
+		} else if(cell->food()) {
+			pos_food.push_back(&pos);
+
+			ai.countOfVisibleFood++;
+		}
+
+	}
+}

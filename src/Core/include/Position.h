@@ -14,8 +14,8 @@ public:
 	Position(int32_t x, int32_t y);
 	virtual ~Position() = default;
 
-	constexpr int32_t x() const { return m_x; }
-	constexpr int32_t y() const { return m_y; }
+	int32_t x() const { return m_x; }
+	int32_t y() const { return m_y; }
 
 	void init(int32_t x, int32_t y) { m_x = x; m_y = y; }
 	void setX(int32_t x) { m_x = x; }

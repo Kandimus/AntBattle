@@ -16,10 +16,6 @@ public:
 	Player(uint32_t index, const std::string& libname);
 	virtual ~Player();
 
-//	void/*Command*/ doWorkerProcess(/*PlayerInfo*/);
-//	void/*Command*/ doSolderProcess(/*PlayerInfo*/);
-//	void/*Command*/ doQueenProcess(/*PlayerInfo*/);
-
 	bool isInit() const;
 
 	uint32_t index() const { return m_index; }
@@ -29,6 +25,7 @@ public:
 	AntType antType() const { return m_info.type; }
 	const std::string& teamName() const { return m_info.teamName; }
 	const std::string& libVersion() const { return m_info.version; }
+	void changeTeamName(uint32_t count);
 
 	void setAntQueen(const std::weak_ptr<Ant>& queen);
 	std::weak_ptr<Ant> antQueen();

@@ -3,32 +3,31 @@
 #include <stdint.h>
 #include <string>
 
-namespace AntBattle {
+#include "ApiVersion.h"
+#include "Direction.h"
 
-enum AntClass {
-	Worker = 0,
-	Solder,
-	Queen,
-};
+namespace AntBattle {
 
 struct AntInfo
 {
-	uint32_t iteration;
-	uint32_t countOfWorker;
-	uint32_t countOfSolder;
-	uint32_t countOfFood;
+	uint32_t iteration = 0;
+	uint32_t countOfWorker = 0;
+	uint32_t countOfSolder = 0;
+	uint32_t countOfFood = 0;
+	//TODO lastCommand;
+	//TODO lastCmdStatus;
 
-	AntClass antClass;
-	uint32_t satiety;
-	uint32_t health;
-	uint32_t satietyPrecent;
-	uint32_t cargo;
-	uint32_t distanceToQueen;
-	uint32_t countOfVisibleAlly;
-	uint32_t countOfVisibleEnemies;
-	uint32_t countOfVisibleFood;
-	uint32_t directionToNearEnemy;
-	uint32_t directionToNearFood;
+	double healthPrecent = 0.0;
+	double satietyPrecent = 0.0;
+	uint32_t cargo = 0;
+	uint32_t distanceToQueen = 0;
+	Direction directionToLabel = Direction::Nord;
+	uint32_t distanceToLabel = 0;
+	uint32_t countOfVisibleAlly = 0;
+	uint32_t countOfVisibleEnemies = 0;
+	uint32_t countOfVisibleFood = 0;
+	Direction directionToNearEnemy = Direction::Nord;
+	Direction directionToNearFood = Direction::Nord;
 };
 
 };

@@ -1,3 +1,6 @@
 [submodule "src/json"]
 	path = src/json
 	url = git@github.com:nlohmann/json.git
+[submodule "src/SimpleArgs"]
+	path = src/SimpleArgs
+	url = https://github.com/Kandimus/SimpleArgs.git
