@@ -15,6 +15,9 @@
 	}
 }
 
+// Information of new turn
+{"turn": 0}
+
 // Information of single cell. Send before end of turn
 {"cell":{"type":"empty","x":0,"y":0}}
 {"cell":{"type":"stone","x":0,"y":0}}

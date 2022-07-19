@@ -69,6 +69,14 @@ void FileProvider::saveNewTurn(uint32_t iteration)
 	if (!isFileOpen(file)) {
 		return;
 	}
+
+	nlohmann::json json;
+
+	json["turn"] = iteration;
+
+	file << json << std::endl;
+
+	file.close();
 }
 
 void FileProvider::saveMap(const std::weak_ptr<Map>& map)
