@@ -22,10 +22,6 @@ Player::Player(uint32_t index, const std::string& libname)
 
 	//TODO calc m_libHash as CRC32(file libname)
 
-	//TODO only for test without lib
-	m_info.teamName = "test Team";
-	m_info.type     = AntType::Black;
-
 	m_libHash = 0;
 }
 

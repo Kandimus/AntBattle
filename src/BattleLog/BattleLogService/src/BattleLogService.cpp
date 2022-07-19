@@ -27,6 +27,13 @@ void BattleLogService::savePlayer(const std::weak_ptr<Player>& player)
 	}
 }
 
+void BattleLogService::saveNewTurn(uint32_t iteration)
+{
+	for (auto& provider : m_providers) {
+		provider->saveNewTurn(iteration);
+	}
+}
+
 void BattleLogService::saveMap(const std::weak_ptr<Map>& map)
 {
 	for (auto& provider : m_providers) {

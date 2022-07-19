@@ -5,8 +5,8 @@
 #include <string>
 #include "Position.h"
 #include "Direction.h"
-#include "PlayerInfo.h"
-#include "Command.h"
+
+#include "Functions.h"
 
 namespace AntBattle {
 
@@ -25,13 +25,17 @@ public:
 	};
 
 public:
-	virtual void reset();
-
 	virtual uint32_t maxSatiety() const = 0;
 	virtual uint32_t maxHealth() const = 0;
 	virtual uint32_t maxAttack() const = 0;
 	virtual uint32_t maxVisibility() const = 0;
+
 	virtual std::string strType() const = 0;
+	virtual uint32_t cargo() const = 0;
+
+	virtual void reset();
+
+	void process(AntInfo& ai, Command& cmd);
 
 	double satietyPercent();
 	double healthPercent();
@@ -58,7 +62,7 @@ protected:
 
 	Command m_command;
 	std::weak_ptr<Player> m_player;
-	AntProcess m_fnProcess;
+	AntProcess m_fnProcess = nullptr;
 };
 
 };

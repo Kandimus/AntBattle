@@ -21,6 +21,15 @@ void Ant::reset()
 	m_isFight = false;
 }
 
+void Ant::process(AntInfo& ai, Command& cmd)
+{
+	if (!m_fnProcess) {
+		return;
+	}
+
+	m_fnProcess(&ai, &cmd);
+}
+
 double Ant::satietyPercent()
 {
 	return maxSatiety() / m_satiety * 100.0;

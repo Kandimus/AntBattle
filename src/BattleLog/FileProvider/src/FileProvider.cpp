@@ -20,11 +20,24 @@ FileProvider::FileProvider(const std::string& filename)
 
 	if (!file.is_open()) {
 		if (!m_cantOpen) {
-			Log::instance().put(format("Error: Can not open the '%s' log file!", m_filename.c_str()));
+			Log::instance().put(format("Error: Can create the '%s' log file!", m_filename.c_str()));
 			m_cantOpen = true;
 		}
 		return;
 	}
+}
+
+bool FileProvider::isFileOpen(std::ofstream& of)
+{
+	if (!of.is_open()) {
+		if (!m_cantOpen) {
+			Log::instance().put(format("Error: Can not open the '%s' log file!", m_filename.c_str()));
+			m_cantOpen = true;
+		}
+		return false;
+	}
+
+	return true;
 }
 
 void FileProvider::savePlayer(const std::weak_ptr<Player>& player)
@@ -32,11 +45,7 @@ void FileProvider::savePlayer(const std::weak_ptr<Player>& player)
 	auto pPlayer = player.lock();
 	std::ofstream file(m_filename, std::ios::app);
 
-	if (!file.is_open()) {
-		if (!m_cantOpen) {
-			Log::instance().put(format("Error: Can not open the '%s' log file!", m_filename.c_str()));
-			m_cantOpen = true;
-		}
+	if (!isFileOpen(file)) {
 		return;
 	}
 
@@ -53,16 +62,21 @@ void FileProvider::savePlayer(const std::weak_ptr<Player>& player)
 	file.close();
 }
 
+void FileProvider::saveNewTurn(uint32_t iteration)
+{
+	std::ofstream file(m_filename, std::ios::app);
+
+	if (!isFileOpen(file)) {
+		return;
+	}
+}
+
 void FileProvider::saveMap(const std::weak_ptr<Map>& map)
 {
 	auto pMap = map.lock();
 	std::ofstream file(m_filename, std::ios::app);
 
-	if (!file.is_open()) {
-		if (!m_cantOpen) {
-			Log::instance().put(format("Error: Can not open the '%s' log file!", m_filename.c_str()));
-			m_cantOpen = true;
-		}
+	if (!isFileOpen(file)) {
 		return;
 	}
 

@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-#include "../../Interface/PlayerInfo.h"
+#include "Functions.h"
 
 namespace AntBattle {
 
@@ -30,6 +30,15 @@ public:
 	void setAntQueen(const std::weak_ptr<Ant>& queen);
 	std::weak_ptr<Ant> antQueen();
 
+	void modifyCountOfSolders(int32_t val) { m_countOfSolders += val; }
+	uint32_t countOfSolders() const { return m_countOfSolders; }
+	void modifyCountOfWorkers(int32_t val) { m_countOfWorkers += val; }
+	uint32_t countOfWorkers() const { return m_countOfWorkers; }
+
+	AntProcess processWorker() const { return m_fnWorkerProcess; }
+	AntProcess processSolder() const { return m_fnSolderProcess; }
+	AntProcess processQueen() const { return m_fnQueenProcess; }
+
 protected:
 	bool loadLibrary();
 
@@ -48,6 +57,8 @@ protected:
 	AntProcess  m_fnQueenProcess = nullptr;
 
 	std::weak_ptr<Ant> m_antQueen;
+	uint32_t m_countOfWorkers = 0;
+	uint32_t m_countOfSolders = 0;
 };
 
 };

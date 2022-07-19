@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Position.h"
+#include "ApiVersion.h"
 
 namespace AntBattle {
 
@@ -37,13 +38,11 @@ public:
 
 	void moveAnt(const std::weak_ptr<Ant>& ant, const Position& pos);
 
+	std::shared_ptr<Ant> createAnt(std::weak_ptr<Player> player, AntClass ant_class, const Position& pos, uint32_t r);
+
 protected:
 	void incPosition(Position& pos, uint32_t x = 1) const;
 	int32_t absPosition(const Position& pos) const;
-
-	std::shared_ptr<Ant> createPlayerQueenAnt(std::shared_ptr<Player> player) const;
-	std::shared_ptr<Ant> createPlayerSolderAnt(std::shared_ptr<Player> player) const;
-	std::shared_ptr<Ant> createPlayerWorkerAnt(std::shared_ptr<Player> player) const;
 
 protected:
 	Position m_size;

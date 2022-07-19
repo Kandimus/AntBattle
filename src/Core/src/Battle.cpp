@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "Config.h"
 
+#include "Ant.h"
 #include "Math.h"
 #include "Map.h"
 #include "Cell.h"
@@ -69,24 +70,52 @@ void Battle::run()
 
 	// main loop
 	while(true) {
+		//---------------------------------------------------------------------
+		// Start of iteration
+
 		// clear IsChange flag
 		m_map->clearChanged();
+		m_iteration++;
 
 		// randomize the list of ants
 		std::shuffle(m_ants.begin(), m_ants.end(), Math::randGenerator());
 
+		// save log
+		m_logService.saveNewTurn(m_iteration);
+
+
+		//---------------------------------------------------------------------
+		// Ant phase
 		for (auto& ant : m_ants) {
-			std::weak_ptr<Player> plr = ant->player();
-			Command cmd;
+			auto player = ant->player().lock();
 
 			if(!ant->hasCommand()) {
-				//TODO generate AntInfo for current ant
-				//ant->process(&ai, &cmd);
-				//ant->setCommand(cmd);
+				AntInfo ai;
+				Command cmd;
+
+				auto queen = player->antQueen().lock();
+
+				generateAntInfo(ant, ai);
+				ai.iteration = m_iteration;
+				ai.countOfWorker = player->countOfWorkers();
+				ai.countOfSolder = player->countOfSolders();
+				ai.countOfFood = queen->cargo();
+
+				ant->process(ai, cmd);
+				ant->setCommand(cmd);
 			}
 
 			doAntCommand(ant);
+
+			//TODO decrease m_satiety, check for 0
+
+			//TODO check health for 0
+			//TODO to kill ant, update statistic
 		}
+
+		//---------------------------------------------------------------------
+		// End of iteration
+		m_logService.saveMap(m_map);
 	}
 }
 
@@ -172,27 +201,49 @@ void Battle::generateAntInfo(AntSharedPtr& ant, AntInfo& ai)
 	auto visible = Math::visibleCells(ant->position(), ant->maxVisibility());
 	auto owner = ant->player().lock();
 	auto quuen = owner->antQueen().lock();
-	std::vector<const Position*> pos_food;
-	std::vector<const Position*> pos_enemy;
+	uint32_t min_dist_food = 0xffffffff;
+	uint32_t min_dist_enemy = 0xffffffff;
 
-	ai = {};
 	ai.healthPrecent = ant->healthPercent();
 	ai.satietyPrecent = ant->satietyPercent();
-	//TODO dynamic_cast to WorkerAnt and check cargo
+	ai.cargo = ant->cargo();
 //	ai.directionToQueen = Math::directionTo(ant->position(), quuen->position());
 	ai.distanceToQueen = Math::distanceTo(ant->position(), quuen->position());
+	ai.directionToLabel = Direction::Nord; //TODO fix it
 	ai.distanceToLabel = 0; //TODO fix it
+	ai.directionToNearEnemy = Direction::Nord;
+	ai.directionToNearFood = Direction::Nord;
 
 	for (auto& pos : visible) {
 		auto cell = m_map->cell(pos).lock();
 
-		if (cell->isEmpty()) {
+		if (cell->isEmpty() || cell->isStone()) {
 			continue;
 		} else if(cell->food()) {
-			pos_food.push_back(&pos);
+			uint32_t dist = Math::distanceTo(ant->position(), pos);
+
+			if (dist < min_dist_food) {
+				min_dist_food = dist;
+				ai.directionToNearFood = Math::directionTo(ant->position(), pos);
+			}
 
 			ai.countOfVisibleFood++;
-		}
+		} else {
+			auto cell_ant = cell->ant().lock();
+			auto cell_player = cell_ant->player().lock();
 
+			if (owner->index() == cell_player->index()) {
+				ai.countOfVisibleAlly++;
+			} else {
+				uint32_t dist = Math::distanceTo(ant->position(), pos);
+
+				if (dist < min_dist_enemy) {
+					min_dist_enemy = dist;
+					ai.directionToNearEnemy = Math::directionTo(ant->position(), pos);
+				}
+
+				ai.countOfVisibleEnemies++;
+			}
+		}
 	}
 }

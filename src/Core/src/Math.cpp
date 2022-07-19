@@ -170,6 +170,7 @@ Direction directionTo(const Position& posFrom, const Position& posTo)
 	}
 }
 
+//TODO Need optimize this algorithm!!!!!!!!!!
 uint32_t distanceTo(const Position& posFrom, const Position& posTo)
 {
 	Position pos = posTo - posFrom;

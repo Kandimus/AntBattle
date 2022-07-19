@@ -2,7 +2,7 @@
 
 using namespace AntBattle;
 
-BlackAntWorker::BlackAntWorker()
-	: AntWorker()
+BlackAntWorker::BlackAntWorker(std::weak_ptr<Player> player)
+	: AntWorker(player)
 {
 }

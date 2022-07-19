@@ -2,6 +2,7 @@
 
 using namespace AntBattle;
 
-BlackAntSolder::BlackAntSolder()
+BlackAntSolder::BlackAntSolder(std::weak_ptr<Player> player)
+	: AntSolder(player)
 {
 }

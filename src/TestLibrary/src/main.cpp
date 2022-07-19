@@ -3,6 +3,7 @@
 
 #include "PlayerInfo.h"
 #include "AntInfo.h"
+#include "Command.h"
 
 #ifdef __cplusplus
 extern "C"

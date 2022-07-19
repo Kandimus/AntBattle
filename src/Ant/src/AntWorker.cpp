@@ -1,10 +1,19 @@
 #include "AntWorker.h"
+#include "Player.h"
 
 using namespace AntBattle;
 
+AntWorker::AntWorker(std::weak_ptr<Player> player)
+	: Ant()
+{
+	auto pPlayer = player.lock();
+
+	m_fnProcess = pPlayer->processWorker();
+}
+
 void AntWorker::reset()
 {
-	m_cargoFood = 0;
-
 	Ant::reset();
+
+	m_cargo = 0;
 }

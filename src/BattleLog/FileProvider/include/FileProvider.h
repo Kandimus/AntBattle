@@ -12,7 +12,11 @@ public:
 
 
 	void savePlayer(const std::weak_ptr<Player>& player) override;
+	void saveNewTurn(uint32_t iteration) override;
 	void saveMap(const std::weak_ptr<Map>& map) override;
+
+protected:
+	bool isFileOpen(std::ofstream& of);
 
 protected:
 	std::string m_filename = "";

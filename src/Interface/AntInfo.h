@@ -14,8 +14,6 @@ struct AntInfo
 	uint32_t countOfWorker = 0;
 	uint32_t countOfSolder = 0;
 	uint32_t countOfFood = 0;
-	//TODO lastCommand;
-	//TODO lastCmdStatus;
 
 	double healthPrecent = 0.0;
 	double satietyPrecent = 0.0;
@@ -28,6 +26,9 @@ struct AntInfo
 	uint32_t countOfVisibleFood = 0;
 	Direction directionToNearEnemy = Direction::Nord;
 	Direction directionToNearFood = Direction::Nord;
+
+	//TODO lastCommand;
+	//TODO lastCmdStatus;
 };
 
 };

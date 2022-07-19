@@ -6,10 +6,7 @@
 #include "Player.h"
 #include "Config.h"
 
-#include "Ant.h"
-#include "BlackAntQueen.h"
-#include "BlackAntSolder.h"
-#include "BlackAntWorker.h"
+#include "AntProvider.h"
 
 using namespace AntBattle;
 
@@ -68,41 +65,18 @@ VectorSharedAnt Map::generate(const std::vector<std::shared_ptr<Player>>& player
 		posQueen = nearAvaliblePosition(posQueen);
 
 		// do place Queen
-		auto queen = createPlayerQueenAnt(player);
-		queen->setPosition(posQueen);
-		queen->reset();
-		player->setAntQueen(queen);
-		queen->setPlayer(player);
-		m_map[absPosition(posQueen)]->setAnt(queen);
+		auto queen = createAnt(player, AntClass::Queen, posQueen, 1);
 		ants.push_back(queen);
 
 		// do place workers
 		for (int ii = 0; ii < conf->workerCountOfStart(); ++ii) {
-			Position pos(Math::random(0, m_startingSquare * 2 + 1), Math::random(0, m_startingSquare * 2 + 1));
-			pos -= (m_startingSquare + 1);
-			pos += posQueen;
-			pos = nearAvaliblePosition(pos);
-
-			auto worker = createPlayerWorkerAnt(player);
-			worker->setPosition(pos);
-			worker->reset();
-			worker->setPlayer(player);
-			m_map[absPosition(pos)]->setAnt(worker);
+			auto worker = createAnt(player, AntClass::Worker, posQueen, m_startingSquare);
 			ants.push_back(worker);
 		}
 
 		// do place workers
 		for (int ii = 0; ii < conf->solderCountOfStart(); ++ii) {
-			Position pos(Math::random(0, m_startingSquare * 2 + 1), Math::random(0, m_startingSquare * 2 + 1));
-			pos -= (m_startingSquare + 1);
-			pos += posQueen;
-			pos = nearAvaliblePosition(pos);
-
-			auto solder = createPlayerSolderAnt(player);
-			solder->setPosition(pos);
-			solder->reset();
-			solder->setPlayer(player);
-			m_map[absPosition(pos)]->setAnt(solder);
+			auto solder = createAnt(player, AntClass::Solder, posQueen, m_startingSquare);
 			ants.push_back(solder);
 		}
 	}
@@ -110,28 +84,21 @@ VectorSharedAnt Map::generate(const std::vector<std::shared_ptr<Player>>& player
 	return ants;
 }
 
-std::shared_ptr<Ant> Map::createPlayerQueenAnt(std::shared_ptr<Player> player) const
+std::shared_ptr<Ant> Map::createAnt(std::weak_ptr<Player> player, AntClass ant_class, const Position& pos, uint32_t r)
 {
-	switch (player->antType()) {
-		case AntType::Black: return std::make_shared<BlackAntQueen>();
-		case AntType::Red: return std::make_shared<BlackAntQueen>();
-	}
-}
+	Position calc_pos(Math::random(0, r * 2), Math::random(0, r * 2));
+	calc_pos -= r;
+	calc_pos += pos;
+	calc_pos = nearAvaliblePosition(calc_pos);
 
-std::shared_ptr<Ant> Map::createPlayerSolderAnt(std::shared_ptr<Player> player) const
-{
-	switch (player->antType()) {
-		case AntType::Black: return std::make_shared<BlackAntSolder>();
-		case AntType::Red: return std::make_shared<BlackAntSolder>();
-	}
-}
+	auto ant = Provide::newAnt(player, ant_class);
 
-std::shared_ptr<Ant> Map::createPlayerWorkerAnt(std::shared_ptr<Player> player) const
-{
-	switch (player->antType()) {
-		case AntType::Black: return std::make_shared<BlackAntWorker>();
-		case AntType::Red: return std::make_shared<BlackAntWorker>();
-	}
+	ant->setPosition(calc_pos);
+	ant->reset();
+
+	m_map[absPosition(calc_pos)]->setAnt(ant);
+
+	return ant;
 }
 
 bool Map::isCellEmpty(const Position& pos) const

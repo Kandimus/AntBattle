@@ -40,6 +40,7 @@ protected:
 	void generateAntInfo(AntSharedPtr& ant, AntInfo& ai);
 
 protected:
+	uint32_t m_iteration = 0;
 	bool m_isInit = false;
 	uint64_t m_uid;
 	std::shared_ptr<Config> m_conf;
