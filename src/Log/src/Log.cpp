@@ -56,8 +56,12 @@ void Log::setDir(const std::string& dir)
 	}
 }
 
-void Log::put(const std::string& text)
+void Log::put(Level level, const std::string& text)
 {
+	if (level > m_level) {
+		return;
+	}
+
 	std::time_t t = std::time(nullptr);
 	std::tm* dt = std::localtime(&t);
 	std::string filename = m_dir + format("%08x.log", t / (24 * 60 * 60));

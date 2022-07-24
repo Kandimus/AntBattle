@@ -11,7 +11,6 @@
 using namespace AntBattle;
 
 using SharedAnt = std::shared_ptr<Ant>;
-using VectorSharedAnt = std::vector<std::shared_ptr<Ant>>;
 
 Map::Map(const std::weak_ptr<Config>& conf)
 	: m_conf(conf)
@@ -27,12 +26,12 @@ Map::Map(const std::weak_ptr<Config>& conf)
 
 	if (w < m_minWidth) {
 		w = m_minWidth;
-		Log::instance().put(format("Set width = %i", w));
+		Log::instance().put(Log::Level::Info, format("Set width = %i", w));
 	}
 
 	if (h < m_minHeight) {
 		h = m_minHeight;
-		Log::instance().put(format("Set height = %i", h));
+		Log::instance().put(Log::Level::Info, format("Set height = %i", h));
 	}
 
 	m_size.init(w, h);
@@ -44,12 +43,12 @@ Map::Map(const std::weak_ptr<Config>& conf)
 		incPosition(pos);
 	}
 
-	Log::instance().put(format("Create map [%i x %i]", m_size.x(), m_size.y()));
+	Log::instance().put(Log::Level::Info, format("Create map [%i x %i]", m_size.x(), m_size.y()));
 }
 
-VectorSharedAnt Map::generate(const std::vector<std::shared_ptr<Player>>& players)
+ListSharedAnt Map::generate(const std::vector<std::shared_ptr<Player>>& players)
 {
-	VectorSharedAnt ants;
+	ListSharedAnt ants;
 	auto conf = m_conf.lock();
 
 	// countCell = m_map.size();
@@ -99,6 +98,12 @@ std::shared_ptr<Ant> Map::createAnt(std::weak_ptr<Player> player, AntClass ant_c
 	m_map[absPosition(calc_pos)]->setAnt(ant);
 
 	return ant;
+}
+
+void Map::removeAnt(const Position& pos)
+{
+	m_map[absPosition(pos)]->removeAnt();
+	//TODO Perhaps in the place of a dead ant you can create food
 }
 
 bool Map::isCellEmpty(const Position& pos) const

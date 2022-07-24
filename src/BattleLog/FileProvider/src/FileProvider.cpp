@@ -20,7 +20,7 @@ FileProvider::FileProvider(const std::string& filename)
 
 	if (!file.is_open()) {
 		if (!m_cantOpen) {
-			Log::instance().put(format("Error: Can create the '%s' log file!", m_filename.c_str()));
+			Log::instance().put(Log::Level::Error, format("Error: Can create the '%s' log file!", m_filename.c_str()));
 			m_cantOpen = true;
 		}
 		return;
@@ -31,7 +31,7 @@ bool FileProvider::isFileOpen(std::ofstream& of)
 {
 	if (!of.is_open()) {
 		if (!m_cantOpen) {
-			Log::instance().put(format("Error: Can not open the '%s' log file!", m_filename.c_str()));
+			Log::instance().put(Log::Level::Error, format("Error: Can not open the '%s' log file!", m_filename.c_str()));
 			m_cantOpen = true;
 		}
 		return false;
@@ -111,7 +111,8 @@ void FileProvider::saveMap(const std::weak_ptr<Map>& map)
 			json["cell"]["type"] = "ant";
 			json["cell"]["ant"]["type"] = pAnt->strType();
 			json["cell"]["ant"]["player"] = pPlayer->index();
-			json["cell"]["ant"]["health"] = pAnt->healthPercent();
+			json["cell"]["ant"]["health"] = format("%.2f", pAnt->healthPercent());
+			json["cell"]["ant"]["satiety"] = format("%.2f", pAnt->satietyPercent());
 		}
 
 		file << json << std::endl;

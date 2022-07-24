@@ -28,6 +28,7 @@ std::shared_ptr<AntBattle::Ant> provideBlackAnt(std::weak_ptr<AntBattle::Player>
 		case AntBattle::AntClass::Queen:
 			ant = std::make_shared<AntBattle::BlackAntQueen>(player);
 			pPlayer->setAntQueen(ant);
+			break;
 
 		default:
 			return nullptr;
@@ -35,7 +36,7 @@ std::shared_ptr<AntBattle::Ant> provideBlackAnt(std::weak_ptr<AntBattle::Player>
 
 	ant->setPlayer(player);
 
-	return nullptr;
+	return ant;
 }
 
 std::shared_ptr<Ant> Provide::newAnt(std::weak_ptr<Player> player, AntClass ant_class)

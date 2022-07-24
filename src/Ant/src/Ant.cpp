@@ -30,14 +30,31 @@ void Ant::process(AntInfo& ai, Command& cmd)
 	m_fnProcess(&ai, &cmd);
 }
 
+bool Ant::endTurn()
+{
+	if (m_health <= 0) {
+		m_status = Status::Dead;
+		return false;
+	}
+
+	--m_satiety;
+
+	if (m_satiety <= 0) {
+		m_status = Status::Dead;
+		return false;
+	}
+
+	return true;
+}
+
 double Ant::satietyPercent()
 {
-	return maxSatiety() / m_satiety * 100.0;
+	return static_cast<double>(m_satiety) / maxSatiety() * 100.0;
 }
 
 double Ant::healthPercent()
 {
-	return maxHealth() / m_health * 100.0;
+	return static_cast<double>(m_health) / maxHealth() * 100.0;
 }
 
 std::weak_ptr<Player> Ant::player() const

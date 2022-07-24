@@ -1,11 +1,16 @@
 #include <iostream>
 #include "Battle.h"
 #include "Math.h"
+#include "Log.h"
 #include "simpleargs.h"
 
 namespace Arg {
-	const std::string Config = "config";
-	const char Config_short = 'c';
+
+using ArgName = const std::pair<const std::string, const char>;
+
+ArgName Config = {"config", 'c'};
+ArgName Log    = {"log", 'l'};
+
 }
 
 
@@ -13,11 +18,14 @@ namespace Arg {
 int main(int argc, const char **argv)
 {
 	rSimpleArgs::instance()
-		.addOption(Arg::Config, Arg::Config_short, "");
+		.addOption(Arg::Config.first, Arg::Config.second, "")
+		.addOption(Arg::Log.first   , Arg::Log.second , "");
 
 	rSimpleArgs::instance().parse(argc, argv);
 
-	if (rSimpleArgs::instance().getOption(Arg::Config).empty()) {
+	AntBattle::Log::instance().setLevel(AntBattle::Log::Level::Debug);
+
+	if (rSimpleArgs::instance().getOption(Arg::Config.first).empty()) {
 		std::cout << "Do not selected configuration file!" << std::endl;
 		return 1;
 	}
@@ -28,7 +36,7 @@ int main(int argc, const char **argv)
 		plr_list.push_back(rSimpleArgs::instance().getArgument(ii));
 	}
 
-	AntBattle::Battle battle(rSimpleArgs::instance().getOption(Arg::Config), plr_list);
+	AntBattle::Battle battle(rSimpleArgs::instance().getOption(Arg::Config.first), plr_list);
 
 	battle.run();
 

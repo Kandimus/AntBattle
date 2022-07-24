@@ -14,6 +14,29 @@
 
 using namespace AntBattle;
 
+std::string AntInfoToString(const AntInfo& ai)
+{
+	nlohmann::json json;
+
+	json["iteration"] = ai.iteration;
+	json["countOfWorker"] = ai.countOfWorker;
+	json["countOfSolder"] = ai.countOfSolder;
+	json["countOfFood"] = ai.countOfFood;
+	json["healthPrecent"] = ai.healthPrecent;
+	json["satietyPrecent"] = ai.satietyPrecent;
+	json["cargo"] = ai.cargo;
+	json["distanceToQueen"] = ai.distanceToQueen;
+	json["directionToLabel"] = Math::descriptionDirection(ai.directionToLabel);
+	json["distanceToLabel"] = ai.distanceToLabel;
+	json["countOfVisibleAlly"] = ai.countOfVisibleAlly;
+	json["countOfVisibleEnemies"] = ai.countOfVisibleEnemies;
+	json["countOfVisibleFood"] = ai.countOfVisibleFood;
+	json["directionToNearEnemy"] = Math::descriptionDirection(ai.directionToNearEnemy);
+	json["directionToNearFood"] = Math::descriptionDirection(ai.directionToNearFood);
+
+	return nlohmann::to_string(json);
+}
+
 Battle::Battle(const std::string& confname, const std::vector<std::string>& players)
 {
 	m_conf = std::make_shared<Config>(confname);
@@ -27,7 +50,7 @@ Battle::Battle(const std::string& confname, const std::vector<std::string>& play
 
 	for (auto& player : m_players) {
 		if (!player->isInit()) {
-			Log::instance().put(format("Player '%s' [%s] is not initiliazed", player->teamName().c_str(), player->library().c_str()));
+			Log::instance().put(Log::Level::Error, format("Player '%s' [%s] is not initiliazed", player->teamName().c_str(), player->library().c_str()));
 			return;
 		}
 	}
@@ -45,7 +68,7 @@ Battle::Battle(const std::string& confname, const std::vector<std::string>& play
 
 	m_logService.add(std::make_shared<FileProvider>("test_battle.json"));
 
-	Log::instance().put(format("create new battle. map is [%i x %i]", m_conf->width(), m_conf->height()));
+	Log::instance().put(Log::Level::Info, format("create new battle. map is [%i x %i]", m_conf->width(), m_conf->height()));
 
 	m_isInit = true;
 }
@@ -53,7 +76,7 @@ Battle::Battle(const std::string& confname, const std::vector<std::string>& play
 void Battle::run()
 {
 	if (!m_isInit) {
-		Log::instance().put("Can't start the battle. Battle is not initialized");
+		Log::instance().put(Log::Level::Error, "Can't start the battle. Battle is not initialized");
 		return;
 	}
 
@@ -78,15 +101,15 @@ void Battle::run()
 		m_iteration++;
 
 		// randomize the list of ants
-		std::shuffle(m_ants.begin(), m_ants.end(), Math::randGenerator());
+		VectorSharedAnt ant_vec(m_ants.begin(), m_ants.end());
+		std::shuffle(ant_vec.begin(), ant_vec.end(), Math::randGenerator());
 
 		// save log
 		m_logService.saveNewTurn(m_iteration);
 
-
 		//---------------------------------------------------------------------
 		// Ant phase
-		for (auto& ant : m_ants) {
+		for (auto& ant : ant_vec) {
 			auto player = ant->player().lock();
 
 			if(!ant->hasCommand()) {
@@ -107,15 +130,18 @@ void Battle::run()
 
 			doAntCommand(ant);
 
-			//TODO decrease m_satiety, check for 0
-
-			//TODO check health for 0
-			//TODO to kill ant, update statistic
+			if (!ant->endTurn()) {
+				m_map->removeAnt(ant->position());
+				m_ants.remove(ant);
+			}
 		}
 
 		//---------------------------------------------------------------------
 		// End of iteration
 		m_logService.saveMap(m_map);
+
+		//TODO check for end of game
+		if (m_iteration > 3) break;
 	}
 }
 
@@ -184,7 +210,7 @@ void Battle::moveAnt(AntSharedPtr& ant, const Direction& dir)
 		Position newpos = ant->position() + Math::positionOffset(dir);
 
 		// checking reachability of the new position
-		if (m_map->isCellEmpty(ant->position())) {
+		if (m_map->isCellEmpty(newpos)) {
 			// if the cell is empty then move the ant to it
 			m_map->moveAnt(ant, newpos);
 			return;
@@ -215,6 +241,10 @@ void Battle::generateAntInfo(AntSharedPtr& ant, AntInfo& ai)
 	ai.directionToNearFood = Direction::Nord;
 
 	for (auto& pos : visible) {
+		if (m_map->cell(pos).expired()) {
+			continue;
+		}
+
 		auto cell = m_map->cell(pos).lock();
 
 		if (cell->isEmpty() || cell->isStone()) {
@@ -245,5 +275,9 @@ void Battle::generateAntInfo(AntSharedPtr& ant, AntInfo& ai)
 				ai.countOfVisibleEnemies++;
 			}
 		}
+	}
+
+	if (Log::instance().level() >= Log::Level::Debug) {
+		Log::instance().put(Log::Level::Debug, "AntInfo = " + AntInfoToString(ai));
 	}
 }

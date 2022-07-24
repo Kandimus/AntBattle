@@ -22,6 +22,8 @@ public:
 		Undef = 0,
 		Idle,
 		Moving,
+
+		Dead,
 	};
 
 public:
@@ -51,14 +53,16 @@ public:
 	std::weak_ptr<Player> player() const;
 	void setPlayer(std::weak_ptr<Player> player);
 
+	bool endTurn();
+
 protected:
 	Position m_pos;
 	Status m_status;
 	bool m_isFight;
-	uint32_t m_satiety = 0;
-	uint32_t m_health = 0;
-	uint32_t m_attack = 0;
-	uint32_t m_visibility = 0;
+	int32_t m_satiety = 0;
+	int32_t m_health = 0;
+	int32_t m_attack = 0;
+	int32_t m_visibility = 0;
 
 	Command m_command;
 	std::weak_ptr<Player> m_player;

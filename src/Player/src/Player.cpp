@@ -49,7 +49,7 @@ bool Player::loadLibrary()
 	#endif
 
 	if (!m_handleLib) {
-		Log::instance().put(format("Can't open library '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't open library '%s'", m_libName.c_str()));
 		return false;
 	}
 
@@ -64,19 +64,19 @@ bool Player::loadLibrary()
 	#endif
 
 	if (!m_fnInit) {
-		Log::instance().put(format("Can't load function 'antInit' from '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't load function 'antInit' from '%s'", m_libName.c_str()));
 
 	} else if (!m_fnFinalize) {
-		Log::instance().put(format("Can't load function 'antFinalize' from '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't load function 'antFinalize' from '%s'", m_libName.c_str()));
 
 	} else if (!m_fnWorkerProcess) {
-		Log::instance().put(format("Can't load function 'workerProcess' from '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't load function 'workerProcess' from '%s'", m_libName.c_str()));
 
 	} else if (!m_fnSolderProcess) {
-		Log::instance().put(format("Can't load function 'solderProcess' from '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't load function 'solderProcess' from '%s'", m_libName.c_str()));
 
 	} else if (!m_fnQueenProcess) {
-		Log::instance().put(format("Can't load function 'queenProcess' from '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't load function 'queenProcess' from '%s'", m_libName.c_str()));
 
 	} else {
 		return true;

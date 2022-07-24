@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <list>
 #include <random>
 
 #include "Ant.h"
@@ -16,6 +17,7 @@ namespace AntBattle {
 
 using AntSharedPtr = std::shared_ptr<Ant>;
 using PlayerSharedPtr = std::shared_ptr<Player>;
+using VectorSharedAnt = std::vector<std::shared_ptr<Ant>>;
 
 class Player;
 class Config;
@@ -47,7 +49,7 @@ protected:
 	std::shared_ptr<Map> m_map;
 
 	std::vector<PlayerSharedPtr> m_players;
-	std::vector<AntSharedPtr> m_ants;
+	ListSharedAnt m_ants;
 
 	BattleLogService m_logService;
 };
