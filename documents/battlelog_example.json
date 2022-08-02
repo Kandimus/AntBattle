@@ -1,0 +1,25 @@
+
+
+// Information of Player. Send only start of game
+{
+	"player":{
+		index": 0,
+		"library":
+		{
+			"filename":"red.dll",
+			"hash":0,
+			"version":""
+		},
+		"team":"test Team",
+		"type":0
+	}
+}
+
+// Information of new turn
+{"turn": 0}
+
+// Information of single cell. Send before end of turn
+{"cell":{"type":"empty","x":0,"y":0}}
+{"cell":{"type":"stone","x":0,"y":0}}
+{"cell":{"ant":{"health":100.0,"satiety":100.0,"player":0,"type":"worker"},"type":"ant","x":96,"y":44}}
+

@@ -7,7 +7,8 @@ namespace AntBattle {
 class BlackAntSolder : public AntSolder
 {
 public:
-	BlackAntSolder();
+	BlackAntSolder(std::weak_ptr<Player> player);
+	virtual ~BlackAntSolder() = default;
 
 	virtual uint32_t maxSatiety()    const override { return 13; }
 	virtual uint32_t maxHealth()     const override { return 3;  }

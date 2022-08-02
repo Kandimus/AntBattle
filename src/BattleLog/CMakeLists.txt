@@ -1,3 +1,3 @@
-add_subdirectory(Ant)
-add_subdirectory(Core)
-add_subdirectory(Server)
+add_subdirectory(IBattleLogProvider)
+add_subdirectory(BattleLogService)
+add_subdirectory(FileProvider)

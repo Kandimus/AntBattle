@@ -2,10 +2,11 @@
 
 #include <stdint.h>
 #include <memory>
+#include <string>
 #include "Position.h"
 #include "Direction.h"
-#include "PlayerInfo.h"
-#include "Command.h"
+
+#include "Functions.h"
 
 namespace AntBattle {
 
@@ -21,18 +22,25 @@ public:
 		Undef = 0,
 		Idle,
 		Moving,
+
+		Dead,
 	};
 
 public:
-	virtual void reset();
-
 	virtual uint32_t maxSatiety() const = 0;
 	virtual uint32_t maxHealth() const = 0;
 	virtual uint32_t maxAttack() const = 0;
 	virtual uint32_t maxVisibility() const = 0;
 
+	virtual std::string strType() const = 0;
+	virtual uint32_t cargo() const = 0;
+
+	virtual void reset();
+
+	void process(AntInfo& ai, Command& cmd);
+
 	double satietyPercent();
-	double healtyPercent();
+	double healthPercent();
 
 	bool hasCommand() const { return m_command.type != CommandType::Idle; }
 	void setCommand(const Command& cmd);
@@ -45,18 +53,20 @@ public:
 	std::weak_ptr<Player> player() const;
 	void setPlayer(std::weak_ptr<Player> player);
 
+	bool endTurn();
+
 protected:
 	Position m_pos;
 	Status m_status;
 	bool m_isFight;
-	uint32_t m_satiety = 0;
-	uint32_t m_healty = 0;
-	uint32_t m_attack = 0;
-	uint32_t m_visibility = 0;
+	int32_t m_satiety = 0;
+	int32_t m_health = 0;
+	int32_t m_attack = 0;
+	int32_t m_visibility = 0;
 
 	Command m_command;
 	std::weak_ptr<Player> m_player;
-	AntProcess m_fnProcess;
+	AntProcess m_fnProcess = nullptr;
 };
 
 };

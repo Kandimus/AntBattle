@@ -9,7 +9,9 @@
 
 using namespace AntBattle;
 
-Player::Player(const std::string& libname) : m_libName(libname)
+Player::Player(uint32_t index, const std::string& libname)
+	: m_libName(libname)
+	, m_index(index)
 {
 	//load lib
 	if (loadLibrary()) {
@@ -47,7 +49,7 @@ bool Player::loadLibrary()
 	#endif
 
 	if (!m_handleLib) {
-		Log::instance().put(format("Can't open library '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't open library '%s'", m_libName.c_str()));
 		return false;
 	}
 
@@ -62,19 +64,19 @@ bool Player::loadLibrary()
 	#endif
 
 	if (!m_fnInit) {
-		Log::instance().put(format("Can't load function 'antInit' from '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't load function 'antInit' from '%s'", m_libName.c_str()));
 
 	} else if (!m_fnFinalize) {
-		Log::instance().put(format("Can't load function 'antFinalize' from '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't load function 'antFinalize' from '%s'", m_libName.c_str()));
 
 	} else if (!m_fnWorkerProcess) {
-		Log::instance().put(format("Can't load function 'workerProcess' from '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't load function 'workerProcess' from '%s'", m_libName.c_str()));
 
 	} else if (!m_fnSolderProcess) {
-		Log::instance().put(format("Can't load function 'solderProcess' from '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't load function 'solderProcess' from '%s'", m_libName.c_str()));
 
 	} else if (!m_fnQueenProcess) {
-		Log::instance().put(format("Can't load function 'queenProcess' from '%s'", m_libName.c_str()));
+		Log::instance().put(Log::Level::Error, format("Can't load function 'queenProcess' from '%s'", m_libName.c_str()));
 
 	} else {
 		return true;
@@ -83,12 +85,17 @@ bool Player::loadLibrary()
 	return false;
 }
 
+void Player::changeTeamName(uint32_t count)
+{
+	m_info.teamName += format(" #%u", count);
+}
+
 bool Player::isInit() const
 {
 	return m_isInit;
 }
 
-void Player::antQueen(const std::weak_ptr<Ant>& queen)
+void Player::setAntQueen(const std::weak_ptr<Ant>& queen)
 {
 	m_antQueen = queen;
 }

@@ -2,31 +2,68 @@
 
 #include <vector>
 #include <algorithm>
+#include <ctime>
+#include <cmath>
 
 namespace AntBattle {
 
 namespace Math {
 
+#ifndef WIN32
 std::random_device g_randDev;
 std::mt19937 g_randGenerator(g_randDev());
-
-std::random_device& randDevice()
-{
-	return g_randDev;
-}
-
 
 std::mt19937& randGenerator()
 {
 	return g_randGenerator;
 }
 
+#else
+SimpleRandomClass g_randGenerator;
+
+SimpleRandomClass& randGenerator()
+{
+	return g_randGenerator;
+}
+#endif
+
+uint32_t random(uint32_t min, uint32_t max)
+{
+#ifdef WIN32
+	static bool init = false;
+
+	if (!init) {
+		std::srand(std::time(0));
+		init = true;
+	}
+	uint32_t range = max >= min ? max - min : min - max;
+	int r = std::rand();
+	double normalize_rand = static_cast<double>(r) / RAND_MAX;
+	return static_cast<uint32_t>(normalize_rand * range + 0.5);
+#else
+	std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
+	return dist(g_randGenerator);
+#endif
+
+}
+
 /// return random direction
 Direction randDirection()
 {
-	std::uniform_int_distribution<std::mt19937::result_type> dist0_7(0, 7);
+	return static_cast<Direction>(random(0, 7));
+}
 
-	return static_cast<Direction>(dist0_7(randGenerator()));
+Position randomPositionByDirection(const Direction& dir, uint32_t len)
+{
+	Position result = positionOffset(dir) * len;
+	uint32_t max = len / 3;
+
+	max = !max ? 1 : max;
+
+	result.setX(result.x() + random(0, max) - len / 6);
+	result.setY(result.y() + random(0, max) - len / 6);
+
+	return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,8 +109,7 @@ Direction normalizeDirection(int val)
 Direction probabilisticDirection(const Direction& dir)
 {
 	std::vector<Direction> array;
-	std::uniform_int_distribution<std::mt19937::result_type> dist0_1(0, 1);
-	int clockwise = dist0_1(g_randGenerator);
+	int clockwise = random(0, 1);
 	int val = static_cast<int>(dir);
 
 	array.push_back(dir);
@@ -100,9 +136,7 @@ Direction probabilisticDirection(const Direction& dir)
 
 	array.push_back(normalizeDirection(val + 4));
 
-	std::uniform_int_distribution<std::mt19937::result_type> dist0_n(0, array.size());
-
-	return array[dist0_n(g_randGenerator)];
+	return array[random(0, array.size())];
 }
 
 Direction directionTo(const Position& posFrom, const Position& posTo)
@@ -136,6 +170,13 @@ Direction directionTo(const Position& posFrom, const Position& posTo)
 	}
 }
 
+//TODO Need optimize this algorithm!!!!!!!!!!
+uint32_t distanceTo(const Position& posFrom, const Position& posTo)
+{
+	Position pos = posTo - posFrom;
+	return static_cast<uint32_t>(std::sqrt(double(pos.x()) * double(pos.x()) + double(pos.y()) * double(pos.y())) + 0.5);
+}
+
 /// \brief Create the priority array of direction.
 ///
 /// The array will sorted by priority of select direction, from selected to reverse direction.
@@ -143,8 +184,7 @@ Direction directionTo(const Position& posFrom, const Position& posTo)
 std::vector<Direction> createDirectionArray(const Direction& dir)
 {
 	std::vector<Direction> array;
-	std::uniform_int_distribution<std::mt19937::result_type> dist0_1(0, 1);
-	int clockwise = dist0_1(g_randGenerator);
+	int clockwise = random(0, 1);
 	int val = static_cast<int>(dir);
 
 	array.push_back(dir);
@@ -239,6 +279,21 @@ std::vector<Position> visibleCells(const Position& pos, uint32_t visibility)
 	});
 
 	return result;
+}
+
+std::string descriptionDirection(const Direction& dir, bool shortname)
+{
+	switch(dir) {
+		case Direction::Nord:      return shortname ? "N"  : "Nord";
+		case Direction::NordEast:  return shortname ? "NE" : "NordEast";
+		case Direction::East:      return shortname ? "E"  : "East";
+		case Direction::SouthEast: return shortname ? "SE" : "SouthEast";
+		case Direction::South:     return shortname ? "S"  : "South";
+		case Direction::SouthWest: return shortname ? "SW" : "SouthWest";
+		case Direction::West:      return shortname ? "W"  : "West";
+		case Direction::NordWest:  return shortname ? "NW" : "NordWest";
+		default: return shortname ? "??" : "<Unknow>";
+	}
 }
 
 }; // namespace Math

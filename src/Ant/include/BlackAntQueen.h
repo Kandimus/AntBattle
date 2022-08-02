@@ -7,7 +7,8 @@ namespace AntBattle {
 class BlackAntQueen : public AntQueen
 {
 public:
-	BlackAntQueen();
+	BlackAntQueen(std::weak_ptr<Player> player);
+	virtual ~BlackAntQueen() = default;
 
 	virtual uint32_t maxSatiety()       const override { return 25; }
 	virtual uint32_t maxHealth()        const override { return 15; }

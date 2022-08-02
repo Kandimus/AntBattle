@@ -38,3 +38,13 @@ bool Config::isBordered()
 {
 	return m_conf["map"]["borders"];
 }
+
+uint32_t Config::workerCountOfStart()
+{
+	return m_conf["map"]["worker_count"];
+}
+
+uint32_t Config::solderCountOfStart()
+{
+	return m_conf["map"]["solder_count"];
+}

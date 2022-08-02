@@ -3,8 +3,7 @@
 namespace AntBattle {
 
 enum class Direction {
-	Random = 0,
-	Nord,
+	Nord = 0,
 	NordEast,
 	East,
 	SouthEast,

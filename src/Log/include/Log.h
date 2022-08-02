@@ -10,6 +10,15 @@ class Log
 {
 // Singleton
 public:
+	enum Level
+	{
+		Error,
+		Warning,
+		Info,
+		Debug,
+	};
+
+
 	virtual ~Log() = default;
 	Log(const Log&) = delete;
 	Log(const Log&&) = delete;
@@ -21,12 +30,15 @@ private:
 	Log& operator=(Log&);
 
 public:
-	void put(const std::string& text);
+	void put(Level level, const std::string& text);
 	void setDir(const std::string& dir);
+	Level level(void) const { return m_level; }
+	void setLevel(Level level) { m_level = level; }
 
 private:
 	std::mutex m_mutex;
 	std::string m_dir = "";
+	Level m_level = Level::Info;
 };
 
 };
