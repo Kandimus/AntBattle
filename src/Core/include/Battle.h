@@ -36,6 +36,7 @@ protected:
 	void doAntCommand(AntSharedPtr& ant);
 	void commandAntExplore(AntSharedPtr& ant);
 	void commandAntMove(AntSharedPtr& ant);
+	void commandAntEat(AntSharedPtr& ant);
 
 	void moveAnt(AntSharedPtr& ant, const Direction& dir);
 

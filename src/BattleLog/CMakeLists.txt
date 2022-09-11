@@ -1,3 +1,5 @@
 add_subdirectory(IBattleLogProvider)
 add_subdirectory(BattleLogService)
 add_subdirectory(FileProvider)
+add_subdirectory(TextScreenProvider)
+

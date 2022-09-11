@@ -20,6 +20,13 @@ void BattleLogService::add(const std::shared_ptr<IBattleLogProvider>& provider)
 	m_providers.push_back(provider);
 }
 
+void BattleLogService::saveMapInfo(const std::weak_ptr<Map>& map)
+{
+	for (auto& provider : m_providers) {
+		provider->saveMapInfo(map);
+	}
+}
+
 void BattleLogService::savePlayer(const std::weak_ptr<Player>& player)
 {
 	for (auto& provider : m_providers) {

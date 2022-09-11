@@ -26,12 +26,20 @@ public:
 		Dead,
 	};
 
+	enum class Type {
+		Queen,
+		Solder,
+		Worker,
+	};
+
 public:
 	virtual uint32_t maxSatiety() const = 0;
 	virtual uint32_t maxHealth() const = 0;
 	virtual uint32_t maxAttack() const = 0;
 	virtual uint32_t maxVisibility() const = 0;
 
+	virtual bool isWorker() const = 0;
+	virtual Type type() const = 0;
 	virtual std::string strType() const = 0;
 	virtual uint32_t cargo() const = 0;
 

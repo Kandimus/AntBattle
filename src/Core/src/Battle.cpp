@@ -4,6 +4,7 @@
 #include "Config.h"
 
 #include "Ant.h"
+#include "AntWorker.h"
 #include "Math.h"
 #include "Map.h"
 #include "Cell.h"
@@ -11,6 +12,7 @@
 
 #include "BattleLogService.h"
 #include "FileProvider.h"
+#include "TextScreenProvider.h"
 
 using namespace AntBattle;
 
@@ -67,6 +69,7 @@ Battle::Battle(const std::string& confname, const std::vector<std::string>& play
 	}
 
 	m_logService.add(std::make_shared<FileProvider>("test_battle.json"));
+	m_logService.add(std::make_shared<TextScreenProvider>("test_battle_screen.txt"));
 
 	Log::instance().put(Log::Level::Info, format("create new battle. map is [%i x %i]", m_conf->width(), m_conf->height()));
 
@@ -86,6 +89,7 @@ void Battle::run()
 	m_ants = m_map->generate(m_players);
 
 	// send of starting info
+	m_logService.saveMapInfo(m_map);
 	for (auto& player : m_players) {
 		m_logService.savePlayer(player);
 	}
@@ -124,6 +128,10 @@ void Battle::run()
 				ai.countOfSolder = player->countOfSolders();
 				ai.countOfFood = queen->cargo();
 
+				if (Log::instance().level() >= Log::Level::Debug) {
+					Log::instance().put(Log::Level::Debug, "AntInfo = " + AntInfoToString(ai));
+				}
+
 				ant->process(ai, cmd);
 				ant->setCommand(cmd);
 			}
@@ -133,6 +141,7 @@ void Battle::run()
 			if (!ant->endTurn()) {
 				m_map->removeAnt(ant->position());
 				m_ants.remove(ant);
+				//TODO change countOfWorkers/Solders
 			}
 		}
 
@@ -153,7 +162,7 @@ void Battle::doAntCommand(AntSharedPtr& ant)
 		case CommandType::Idle: cmd.type = CommandType::Explore; cmd.count = 1;
 		case CommandType::Explore: commandAntExplore(ant); break;
 		case CommandType::Move: commandAntMove(ant); break;
-//		case CommandType::Eat: doAntEat(ant);break;
+		case CommandType::Eat: commandAntEat(ant);break;
 //		case CommandType::MoveToFood: doAntMoveToFood(ant); break;
 //		case CommandType::Attack: doAntAttack(ant); break;
 //		case CommandType::MoveAndAttack: doAntMoveAndAttack(ant); break;
@@ -197,7 +206,39 @@ void Battle::commandAntMove(AntSharedPtr& ant)
 	--ant->command().count;
 }
 
-/// \brief Move the ant to selected direction
+/// \brief Moving the ant to the nearest food and do eating it
+///
+///
+void Battle::commandAntEat(AntSharedPtr& ant)
+{
+	Position foodPos = m_map->nearestFood(ant->position(), ant->maxVisibility());
+
+	if (!ant->isWorker()) {
+		//TODO fill LastCommand and AbortReason
+		ant->clearCommand();
+		return;
+	}
+
+	--ant->command().count;
+
+	if (Math::distanceTo(ant->position(), foodPos) > 1) {
+		moveAnt(ant, Math::directionTo(ant->position(), foodPos));
+		return;
+	}
+
+	auto cell = m_map->cell(foodPos).lock();
+	auto worker = dynamic_cast<AntWorker*>(ant.get());
+	int remainder = worker->modifyCargo(cell->food());
+	cell->setFood(remainder);
+
+	if (worker->isFullCargo()) {
+		//TODO fill LastCommand and AbortReason
+		ant->clearCommand();
+	}
+}
+
+
+/// \brief Moving the ant to selected direction
 ///
 /// If we can not move the ant to selected direction then we move ant to direction near to selected
 void Battle::moveAnt(AntSharedPtr& ant, const Direction& dir)
@@ -219,6 +260,7 @@ void Battle::moveAnt(AntSharedPtr& ant, const Direction& dir)
 		// cell is not empty, go to next the direction and to check next
 	}
 
+	//TODO Set the lastCommand as the current command, set reason of abortion of command and do cancel of the current command
 	ant->clearCommand();
 }
 
@@ -275,9 +317,5 @@ void Battle::generateAntInfo(AntSharedPtr& ant, AntInfo& ai)
 				ai.countOfVisibleEnemies++;
 			}
 		}
-	}
-
-	if (Log::instance().level() >= Log::Level::Debug) {
-		Log::instance().put(Log::Level::Debug, "AntInfo = " + AntInfoToString(ai));
 	}
 }

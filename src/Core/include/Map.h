@@ -38,6 +38,7 @@ public:
 	void clearChanged();
 
 	Position nearAvaliblePosition(const Position& pos) const;
+	Position nearestFood(const Position& pos, uint32_t visible) const;
 
 	void moveAnt(const std::weak_ptr<Ant>& ant, const Position& pos);
 	void removeAnt(const Position& pos);

@@ -13,6 +13,8 @@ public:
 	virtual uint32_t maxTurnForWorker() const = 0;
 	virtual uint32_t maxTurnForSolver() const = 0;
 
+	virtual bool isWorker() const override { return false; }
+	virtual Type type() const override { return Type::Queen; }
 	virtual std::string strType() const override { return "queen"; }
 	virtual uint32_t cargo() const override { return m_cargo; }
 	virtual void reset() override;

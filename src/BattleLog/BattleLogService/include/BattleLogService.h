@@ -16,6 +16,7 @@ public:
 public:
 	void add(const std::shared_ptr<IBattleLogProvider>& provider);
 
+	void saveMapInfo(const std::weak_ptr<Map>& map) override;
 	void savePlayer(const std::weak_ptr<Player>& player) override;
 	void saveNewTurn(uint32_t iteration) override;
 	void saveMap(const std::weak_ptr<Map>& map) override;

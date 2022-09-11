@@ -1,5 +1,7 @@
 #include "Map.h"
 
+#include <vector>
+
 #include "Log.h"
 #include "Math.h"
 #include "Cell.h"
@@ -62,6 +64,7 @@ ListSharedAnt Map::generate(const std::vector<std::shared_ptr<Player>>& players)
 		Position posQueen(Math::random(0, m_size.x()), Math::random(0, m_size.y()));
 
 		posQueen = nearAvaliblePosition(posQueen);
+		Log::instance().put(Log::Level::Debug, format("Queen #%i [%i x %i]", player->index(), posQueen.x(), posQueen.y()));
 
 		// do place Queen
 		auto queen = createAnt(player, AntClass::Queen, posQueen, 1);
@@ -169,6 +172,37 @@ Position Map::nearAvaliblePosition(const Position& pos) const
 	}
 
 	return curPos;
+}
+
+Position Map::nearestFood(const Position& pos, uint32_t visible) const
+{
+	std::vector<const Position*> arrMinDist;
+	auto visibleCells = Math::visibleCells(pos, visible);
+	uint32_t minDist = 0xFFFFFFFFU;
+
+	for (auto& posCell : visibleCells) {
+		auto pCell = cell(posCell).lock();
+
+		if (!pCell->food()) {
+			continue;
+		}
+
+		uint32_t dist = Math::distanceTo(pos, posCell);
+		if (dist < minDist) {
+			arrMinDist.clear();
+			arrMinDist.push_back(&posCell);
+		} else if (dist == minDist) {
+			arrMinDist.push_back(&posCell);
+		}
+	}
+
+	if (arrMinDist.empty()) {
+		return Position(-1, -1);
+	}
+
+	uint32_t idx = Math::random(0, arrMinDist.size() - 1);
+
+	return *arrMinDist[idx];
 }
 
 void Map::moveAnt(const std::weak_ptr<Ant>& ant, const Position& pos)

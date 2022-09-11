@@ -13,7 +13,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "../Interface/")
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCE})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json PUBLIC Log Player Ant BattleLogService FileProvider)
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json PUBLIC Log Player Ant BattleLogService FileProvider TextScreenProvider)
 
 if(TESTS_UNIT)
     add_subdirectory(tests)

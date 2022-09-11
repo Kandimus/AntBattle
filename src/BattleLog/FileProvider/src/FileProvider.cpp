@@ -40,6 +40,24 @@ bool FileProvider::isFileOpen(std::ofstream& of)
 	return true;
 }
 
+void FileProvider::saveMapInfo(const std::weak_ptr<Map>& map)
+{
+	auto pMap = map.lock();
+	std::ofstream file(m_filename, std::ios::app);
+
+	if (!isFileOpen(file)) {
+		return;
+	}
+
+	nlohmann::json json;
+
+	json["map"]["size"]["width"]  = pMap->size().x();
+	json["map"]["size"]["height"] = pMap->size().y();
+
+	file << json << std::endl;
+	file.close();
+}
+
 void FileProvider::savePlayer(const std::weak_ptr<Player>& player)
 {
 	auto pPlayer = player.lock();
@@ -104,6 +122,9 @@ void FileProvider::saveMap(const std::weak_ptr<Map>& map)
 			json["cell"]["type"] = "empty";
 		} else if (pCell->isStone()) {
 			json["cell"]["type"] = "stone";
+		} else if (pCell->food()) {
+			json["cell"]["type"] = "food";
+			json["cell"]["food"] = pCell->food();
 		} else {
 			auto pAnt = pCell->ant().lock();
 			auto pPlayer = pAnt->player().lock();

@@ -34,7 +34,7 @@ protected:
 	uint32_t m_food = 0;
 	std::weak_ptr<Ant> m_ant;
 	bool m_isStone = false;
-	bool m_isChanged = true;
+	bool m_isChanged = false;
 };
 
 };
